@@ -1,0 +1,66 @@
+<div class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white flex flex-col lg:flex-row rounded-lg shadow-lg overflow-hidden max-w-5xl w-full">
+      <div class="lg:w-1/2 bg-cover bg-center" style="background-image: url('path-to-your-background-image.jpg'); min-height: 300px;">
+        <!-- Background Image -->
+      </div>
+      <div class="lg:w-1/2 p-6 sm:p-8 lg:p-12">
+        <h1 class="text-2xl font-bold mb-4 text-center">{{ isLoginMode ? 'Se connecter' : 'Créer son compte sur ThéTipTop' }}</h1>
+        <div class="flex flex-col sm:flex-row justify-between mb-6">
+          <button class="bg-blue-600 text-white py-2 px-4 rounded flex items-center justify-center mb-2 sm:mb-0 sm:w-1/2 sm:mr-2">
+            <img src="facebook-icon.svg" alt="Facebook" class="inline-block mr-2 w-5 h-5">S'inscrire avec Facebook
+          </button>
+          <button class="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded flex items-center justify-center sm:w-1/2 sm:ml-2">
+            <img src="google-icon.svg" alt="Google" class="inline-block mr-2 w-5 h-5">S'inscrire avec Google
+          </button>
+        </div>
+        <div class="flex items-center mb-4">
+          <hr class="flex-grow border-t border-gray-300">
+          <span class="px-3 text-gray-500">Ou</span>
+          <hr class="flex-grow border-t border-gray-300">
+        </div>
+        <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-6">
+          <form (ngSubmit)="onSubmit()">
+            <!-- Champs d'inscription -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4" *ngIf="!isLoginMode">
+              <div>
+                <label class="block text-gray-800 text-sm font-bold mb-2" for="nom">Nom</label>
+                <input id="nom" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+              </div>
+              <div>
+                <label class="block text-gray-800 text-sm font-bold mb-2" for="prenom">Prénom</label>
+                <input id="prenom" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+              </div>
+            </div>
+            <div class="mb-4" *ngIf="!isLoginMode">
+              <label class="block text-gray-800 text-sm font-bold mb-2" for="username">Nom d'utilisateur (pseudo)</label>
+              <input id="username" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+              <p class="text-xs text-gray-600 mt-1">Pas d'espaces ni de caractères spéciaux (les tirets "-" sont acceptés)</p>
+            </div>
+            <!-- Champs communs (Connexion & Inscription) -->
+            <div class="mb-4">
+              <label class="block text-gray-800 text-sm font-bold mb-2" for="email">Adresse Email</label>
+              <input id="email" type="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+            <div class="mb-6">
+              <label class="block text-gray-800 text-sm font-bold mb-2" for="password">Mot de passe</label>
+              <input id="password" type="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+            <div class="flex items-center justify-center">
+              <button type="submit" id="submitButton" class="bg-green-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">{{ isLoginMode ? 'Se connecter' : 'Créer mon compte' }}</button>
+            </div>
+          </form>
+        </div>
+        <p class="text-center text-xs text-gray-600 mb-6">Ce formulaire utilise reCAPTCHA. L'utilisation de cette fonctionnalité est soumise aux <a href="#" class="text-blue-600">Règles de confidentialité</a> et aux <a href="#" class="text-blue-600">Conditions d'utilisation de Google</a>.</p>
+        <p class="text-center text-sm text-gray-700">
+            Vous avez déjà un compte? 
+            <a id="toggleLink" href="javascript:void(0)" class="text-blue-600 font-bold" (click)="toggleForm(!isLoginMode)">
+              {{ isLoginMode ? 'Créer un compte' : 'Se connecter' }}
+            </a>
+          </p>
+          
+          
+          
+      </div>
+    </div>
+  </div>
+  
