@@ -1,46 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   isLoginMode = true;
+  email = '';
+  password = '';
+  nom = '';
+  prenom = '';
+  username = '';
+  errorMessage = '';
 
-  loginobj:Login;
+  constructor(private authService: AuthService, private router: Router) {}
 
-
-  constructor() {
-    this.loginobj = new Login()
+  toggleForm(isLoginMode: boolean) {
+    this.isLoginMode = isLoginMode;
   }
 
-  ngOnInit(): void {
-    console.log('LoginComponent initialized');
-  }
-
-  toggleForm(isLogin: boolean) {
-    this.isLoginMode = isLogin;
-    console.log('isLoginMode:', this.isLoginMode);
-  }
-
-  onSubmit() {
+  onSubmit(e:any) {
+    e.preventDefault();
     if (this.isLoginMode) {
-      console.log('Trying to log in');
-      // Logique de connexion ici
+      this.authService.login(this.email, this.password).subscribe(
+        response => {
+          if(response.token.length){
+            localStorage.setItem("token", response.token) 
+            this.router.navigateByUrl('/home');
+          } else {
+            alert("une erreur inattendue s'est produite")
+          }
+        },
+        error => {
+          this.errorMessage = 'Échec de la connexion. Veuillez vérifier vos informations.';
+        }
+      );
     } else {
-      console.log('Trying to create an account');
-      // Logique d'inscription ici
+      // Logique d'inscription
     }
-  }
-}
-
-export class Login{
-  Email: string;
-  Password: string;
-
-  constructor(){
-    this.Email='';
-    this.Password=''
   }
 }
