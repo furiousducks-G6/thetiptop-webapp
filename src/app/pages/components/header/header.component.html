@@ -1,0 +1,36 @@
+<header class="bg-white shadow w-full fixed top-0 left-0 z-50">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <img src="assets/images/logo.png" alt="Logo" class="h-16 md:h-24">
+      </div>
+      <!-- Navigation Links -->
+      <nav [ngClass]="{'hidden': isMobile, 'md:flex space-x-4 mx-auto': true}">
+        <a href="/home" (click)="scrollToSection('home')" [ngClass]="{'text-green-500 font-bold': currentSection === 'home'}" class="text-sm md:text-base text-gray-800 hover:text-green-500">Accueil</a>
+        <a href="/home#lots" (click)="scrollToSection('lots')" [ngClass]="{'text-green-500 font-bold': currentSection === 'lots'}" class="text-sm md:text-base text-gray-800 hover:text-green-500">Lots à Gagner</a>
+        <a href="/home#jeux" (click)="scrollToSection('jeux')" [ngClass]="{'text-green-500 font-bold': currentSection === 'jeux'}" class="text-sm md:text-base text-gray-800 hover:text-green-500">Jeux</a>
+        <a href="/home#contact" (click)="scrollToSection('contact')" [ngClass]="{'text-green-500 font-bold': currentSection === 'contact'}" class="text-sm md:text-base text-gray-800 hover:text-green-500">Contactez Nous</a>
+        <a href="/home#aide" (click)="scrollToSection('aide')" [ngClass]="{'text-green-500 font-bold': currentSection === 'aide'}" class="text-sm md:text-base text-gray-800 hover:text-green-500">Aide ?</a>
+      </nav>
+      <!-- Buttons -->
+      <div [ngClass]="{'hidden': isMobile, 'flex space-x-4': true}">
+        <a href="/login" class="bg-[#388E3C] text-white text-xs px-2 py-1 sm:text-sm sm:px-3 sm:py-1 md:text-base md:px-4 md:py-2 rounded-full">Se Connecter</a>
+      </div>
+      <!-- Hamburger Menu Button -->
+      <button id="menu-btn" class="block md:hidden focus:outline-none" (click)="toggleMenu()">
+        <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="menu" [ngClass]="{'hidden': !isMobile, 'flex flex-col space-y-4': true}">
+      <a href="/home" (click)="scrollToSection('home')" [ngClass]="{'text-green-500 font-bold': currentSection === 'home'}" class="block text-sm text-gray-800 hover:text-green-500 px-4 py-2">Accueil</a>
+      <a href="/home#lots" (click)="scrollToSection('lots')" [ngClass]="{'text-green-500 font-bold': currentSection === 'lots'}" class="block text-sm text-gray-800 hover:text-green-500 px-4 py-2">Lots à Gagner</a>
+      <a href="/home#jeux" (click)="scrollToSection('jeux')" [ngClass]="{'text-green-500 font-bold': currentSection === 'jeux'}" class="block text-sm text-gray-800 hover:text-green-500 px-4 py-2">Jeux</a>
+      <a href="/home#contact" (click)="scrollToSection('contact')" [ngClass]="{'text-green-500 font-bold': currentSection === 'contact'}" class="block text-sm text-gray-800 hover:text-green-500 px-4 py-2">Contactez Nous</a>
+      <a href="/home#aide" (click)="scrollToSection('aide')" [ngClass]="{'text-green-500 font-bold': currentSection === 'aide'}" class="block text-sm text-gray-800 hover:text-green-500 px-4 py-2">Aide ?</a>
+      <a href="/login" class="block bg-[#388E3C] text-white text-xs px-2 py-1 sm:text-sm sm:px-3 sm:py-1 rounded-full mx-4 my-2 w-auto">Se Connecter</a>
+    </div>
+  </header>
+  

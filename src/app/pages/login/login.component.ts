@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   isLoginMode = true;
   email = '';
   password = '';
@@ -16,22 +16,30 @@ export class LoginComponent {
   username = '';
   errorMessage = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['signup']) {
+        this.isLoginMode = false;
+      }
+    });
+  }
 
   toggleForm(isLoginMode: boolean) {
     this.isLoginMode = isLoginMode;
   }
 
-  onSubmit(e:any) {
+  onSubmit(e: any) {
     e.preventDefault();
     if (this.isLoginMode) {
       this.authService.login(this.email, this.password).subscribe(
         response => {
-          if(response.token.length){
-            localStorage.setItem("token", response.token) 
+          if (response.token.length) {
+            localStorage.setItem("token", response.token);
             this.router.navigateByUrl('/home');
           } else {
-            alert("une erreur inattendue s'est produite")
+            alert("une erreur inattendue s'est produite");
           }
         },
         error => {

@@ -1,0 +1,30 @@
+.hidden {
+    display: none;
+  }
+  
+  @media (min-width: 768px) {
+    #menu {
+      display: none !important;
+    }
+  }
+  
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  nav {
+    margin: 0 auto;
+  }
+  
+  nav a {
+    text-align: center;
+  }
+  
+  /* Style for active link */
+  a.active-link {
+    color: #388E3C;
+    font-weight: bold;
+  }
+  
