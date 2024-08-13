@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
             localStorage.setItem("token", response.token);
             this.router.navigateByUrl('/home');
           } else {
-            alert("une erreur inattendue s'est produite");
+            this.errorMessage = "une erreur inattendue s'est produite";
           }
         },
         error => {
@@ -49,5 +49,9 @@ export class LoginComponent implements OnInit {
     } else {
       // Logique d'inscription
     }
+  }
+
+  clearError() {
+    this.errorMessage = '';
   }
 }

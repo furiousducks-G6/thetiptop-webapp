@@ -13,6 +13,16 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, { "Email":email, "password":password });
   }
+
+  register(firstName: string, name: string, email: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, { 
+      firstName, 
+      name, 
+      email, 
+      password 
+    });
+  }
+
   getToken(){
     return localStorage.getItem("token") || "";
   }
