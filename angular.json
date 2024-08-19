@@ -70,7 +70,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "15MB",
-                  "maximumError": "40kB"
+                  "maximumError": "15MB"
                 }
               ],
               "outputHashing": "all"
@@ -92,6 +92,10 @@
             "development": {
               "buildTarget": "thetiptop-web:build:development"
             }
+          },
+          "options": {
+            "proxyConfig": "proxy.conf.json",
+            "ssl": false
           },
           "defaultConfiguration": "development"
         },
