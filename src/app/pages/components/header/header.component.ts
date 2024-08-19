@@ -2,6 +2,9 @@ import { Component, OnInit, HostListener, Inject, AfterViewInit } from '@angular
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { ChangeDetectorRef } from '@angular/core';
+import { UserService } from '../../../services/user.service'; // Assurez-vous d'importer UserService si nécessaire
 
 @Component({
   selector: 'app-header',
@@ -11,19 +14,56 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit, AfterViewInit {
   isMobile: boolean = false;
   currentSection: string = '';
+  isLoggedIn: boolean = false;
+  firstName: string = 'Utilisateur';
+  email: string = 'email';
+  showUserMenu: boolean = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object, private router: Router) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: object,
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService, // Ajout de UserService pour actualiser les informations
+    private cdr: ChangeDetectorRef  // Ajout de ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.checkScreenSize();
     }
+
+    // Récupération du profil utilisateur au démarrage
+    this.loadUserProfile();
+
+    // Abonnez-vous aux mises à jour en temps réel du profil utilisateur
+    this.userService.userProfileUpdated$.subscribe(() => {
+      this.loadUserProfile();
+    });
   }
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.setupIntersectionObserver();
     }
+  }
+
+  private loadUserProfile(): void {
+    this.authService.getUserProfile().subscribe(
+      user => {
+        if (user) {
+          this.isLoggedIn = true;
+          this.firstName = user.firstName || 'Utilisateur';
+          this.email = user.email || 'user@gmail.com';
+        } else {
+          this.isLoggedIn = false;
+        }
+        this.cdr.detectChanges(); // Force la détection des changements
+      },
+      error => {
+        this.isLoggedIn = false;
+        this.cdr.detectChanges(); // Force la détection des changements en cas d'erreur
+      }
+    );
   }
 
   @HostListener('window:resize', ['$event'])
@@ -48,6 +88,10 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     }
   }
 
+  toggleUserMenu(): void {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
   scrollToSection(section: string): void {
     this.router.navigate(['/home'], { fragment: section }).then(() => {
       const element = document.getElementById(section);
@@ -61,7 +105,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     const options = {
       root: null,
       rootMargin: '0px',
-      threshold: 0.5 // Trigger when 50% of the section is visible
+      threshold: 0.5
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -76,5 +120,12 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     sections.forEach(section => {
       observer.observe(section);
     });
+  }
+
+  logout(): void {
+    this.authService.logout(); // Déconnecte l'utilisateur
+    this.isLoggedIn = false;
+    this.router.navigate(['/home']);
+    this.cdr.detectChanges(); // Force la détection des changements après la déconnexion
   }
 }

@@ -9,6 +9,21 @@ import { HomeComponent } from './pages/home/home.component';
 import { AuthInterceptor } from './auth.interceptor';
 import { FooterComponent } from './pages/components/footer/footer.component';
 import { HeaderComponent } from './pages/components/header/header.component';
+import { ContactComponent } from './pages/contact/contact.component';
+import { ProfilComponent } from './pages/utilisateur/profil/profil.component';
+import { UserProfileHeaderComponent } from './pages/utilisateur/user-profile-header/user-profile-header.component';
+import { UserHistoryComponent } from './pages/utilisateur/user-history/user-history.component';
+import { DashboardComponent } from './pages/admin/dashboard/dashboard.component';
+import { LayoutadminComponent } from './pages/admin/layoutadmin/layoutadmin.component';
+import { SidebarComponent } from './pages/admin/components/sidebar/sidebar.component';
+import { TicketsComponent } from './pages/admin/tickets/tickets.component';
+import { LotsComponent } from './pages/admin/lots/lots.component';
+import { UserComponent } from './pages/admin/user/user.component';
+import { CgvComponent } from './pages/cgv/cgv.component';
+import { MentionlegaleComponent } from './pages/mentionlegale/mentionlegale.component';
+import { AideComponent } from './pages/aide/aide.component';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+
 
 
 @NgModule({
@@ -17,22 +32,37 @@ import { HeaderComponent } from './pages/components/header/header.component';
     LayoutComponent,
     HomeComponent,
     FooterComponent,
-    HeaderComponent
+    HeaderComponent,
+    ContactComponent,
+    ProfilComponent,
+    UserProfileHeaderComponent,
+    UserHistoryComponent,
+    DashboardComponent,
+    LayoutadminComponent,
+    SidebarComponent,
+    TicketsComponent,
+    LotsComponent,
+    UserComponent,
+    CgvComponent,
+    MentionlegaleComponent,
+    AideComponent,
+    PageNotFoundComponent,
+
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule, 
+    HttpClientModule,
     AppRoutingModule
   ],
   providers: [
     provideClientHydration(),
     {
-      provide:HTTP_INTERCEPTORS,
+      provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi:true
+      multi: true
     }
   ],
-  bootstrap: [] 
+  // Pas besoin de bootstrap car vous utilisez bootstrapApplication dans main.ts
 })
 export class AppModule { }

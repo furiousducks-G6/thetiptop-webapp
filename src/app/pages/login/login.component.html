@@ -1,3 +1,6 @@
+<div *ngIf="successMessage" class="bg-green-500 text-white p-4 rounded mb-4">
+  {{ successMessage }}
+</div>
 <div class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
   <div class="bg-white flex flex-col lg:flex-row rounded-lg shadow-lg overflow-hidden max-w-5xl w-full">
     <div class="lg:w-1/2 bg-cover bg-center" style="background-image: url('/assets/images/background.jpg'); min-height: 300px;">
@@ -31,27 +34,28 @@
           <!-- Champs d'inscription -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4" *ngIf="!isLoginMode">
             <div>
-              <label class="block text-gray-800 text-sm font-bold mb-2" for="nom">Nom</label>
-              <input id="nom" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+              <label class="block text-gray-800 text-sm font-bold mb-2" for="name">Nom</label>
+              <input id="name" [(ngModel)]="name" name="name" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
             </div>
             <div>
-              <label class="block text-gray-800 text-sm font-bold mb-2" for="prenom">Prénom</label>
-              <input id="prenom" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+              <label class="block text-gray-800 text-sm font-bold mb-2" for="firstName">Prénom</label>
+              <input id="firstName" [(ngModel)]="firstName" name="firstName" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
           </div>
-          <div class="mb-4" *ngIf="!isLoginMode">
-            <label class="block text-gray-800 text-sm font-bold mb-2" for="username">Nom d'utilisateur (pseudo)</label>
-            <input id="username" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-            <p class="text-xs text-gray-600 mt-1">Pas d'espaces ni de caractères spéciaux (les tirets "-" sont acceptés)</p>
-          </div>
+
           <!-- Champs communs (Connexion & Inscription) -->
           <div class="mb-4">
             <label class="block text-gray-800 text-sm font-bold mb-2" for="email">Adresse Email</label>
-            <input id="email" type="email" [(ngModel)]="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            <input id="email" type="email" [(ngModel)]="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
           </div>
-          <div class="mb-6">
+          <div class="mb-4">
             <label class="block text-gray-800 text-sm font-bold mb-2" for="password">Mot de passe</label>
-            <input id="password" type="password" [(ngModel)]="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            <input id="password" type="password" [(ngModel)]="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+            <p class="text-xs text-gray-600 mt-1">Le mot de passe doit contenir au moins 8 caractères, incluant une majuscule, un chiffre, et un caractère spécial, et ne doit pas commencer par un chiffre.</p>
+          </div>
+          <div class="mb-6" *ngIf="!isLoginMode">
+            <label class="block text-gray-800 text-sm font-bold mb-2" for="confirmPassword">Confirmez le mot de passe</label>
+            <input id="confirmPassword" type="password" [(ngModel)]="confirmPassword" name="confirmPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
           </div>
           <div class="flex items-center justify-center">
             <button type="submit" id="submitButton" class="bg-green-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">{{ isLoginMode ? 'Se connecter' : 'Créer mon compte' }}</button>
