@@ -22,7 +22,8 @@ export const routes: Routes = [
   
   {
     path: '', component: LayoutComponent, children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' }, // Redirection de la racine vers la page d'accueil
+      { path: '', component: HomeComponent },
+//      { path: '', redirectTo: 'home', pathMatch: 'full' }, // Redirection de la racine vers la page d'accueil
       { path: 'home', component: HomeComponent }, // Route pour la page d'accueil
       { path: 'contact', component: ContactComponent },
       { path: 'profil', component: ProfilComponent },
