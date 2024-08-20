@@ -25,7 +25,7 @@
           <td class="border px-4 py-2 text-center">{{ ticket.code }}</td>
           <td class="border px-4 py-2 text-center">{{ ticket.prize_name }}</td>
           <td class="border px-4 py-2 text-center">{{ ticket.prize_value }} €</td>
-          <td class="border px-4 py-2 text-center">{{ ticket.claimed ? 'Retiré' : 'Non Retiré' }}</td>
+          <td class="border px-4 py-2 text-center">{{ ticket.isClaimed ? 'Retiré' : 'Non Retiré' }}</td>
           <td class="border px-4 py-2 text-center">
             <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-2">
               <button (click)="printTicket(ticket)" class="bg-[#D9EAD3] text-black font-bold py-1 px-3 rounded-lg hover:bg-[#388E3C] focus:outline-none focus:ring-2 focus:ring-[#388E3C] focus:ring-opacity-50 shadow-md text-xs sm:text-sm">

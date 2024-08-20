@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-user',
@@ -8,76 +9,85 @@ import { Component, OnInit } from '@angular/core';
 export class UserComponent implements OnInit {
   users: any[] = [];
   filteredUsers: any[] = [];
+  paginatedUsers: any[] = [];
   currentPage = 1;
   totalPages = 1;
-  pages: number[] = [];
+  pages: (number | string)[] = [];
   searchTerm: string = '';
   selectedRole: string = '';
   itemsPerPage: number = 10;
+  totalItems: number = 0;
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.users = this.getMockUsers();
-    this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
-    this.filterUsers();
-    this.generatePagesArray();
+    this.loadUsers();
   }
 
-  getMockUsers() {
-    return Array.from({ length: 100 }, (_, i) => ({
-      firstName: `UserFirstName${i + 1}`,
-      lastName: `UserLastName${i + 1}`,
-      email: `user${i + 1}@example.com`,
-      phone: `+123456789${i}`,
-      role: i % 2 === 0 ? 'Admin' : 'User',
-    }));
+  loadUsers(): void {
+    this.userService.getUsers(this.currentPage, this.itemsPerPage).subscribe(
+      (data) => {
+        this.users = data['hydra:member'] || [];
+        this.totalItems = data['hydra:totalItems'] || 0;
+        this.applyFiltersAndPagination();
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des utilisateurs :', error);
+      }
+    );
+  }
+
+  applyFiltersAndPagination(): void {
+    this.filterUsers();
+    this.paginateUsers();
+    this.generatePagesArray();
   }
 
   filterUsers(): void {
-    const filtered = this.users.filter(user => 
-      (!this.searchTerm || user.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()) || user.lastName.toLowerCase().includes(this.searchTerm.toLowerCase())) &&
-      (!this.selectedRole || user.role === this.selectedRole)
-    );
+    let filtered = this.users;
 
-    this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
+    if (this.searchTerm) {
+      filtered = filtered.filter(user =>
+        (user.firstName && user.firstName.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+        (user.lastName && user.lastName.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+        (user.email && user.email.toLowerCase().includes(this.searchTerm.toLowerCase()))
+      );
+    }
+
+    if (this.selectedRole) {
+      filtered = filtered.filter(user => user.roles && user.roles.includes(this.selectedRole));
+    }
+
+    this.filteredUsers = filtered;
+    this.totalItems = this.filteredUsers.length;
+}
+
+
+  paginateUsers(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.filteredUsers = filtered.slice(startIndex, endIndex);
-    this.generatePagesArray();
+    this.paginatedUsers = this.filteredUsers.slice(startIndex, endIndex);
   }
 
-  generatePagesArray() {
-    const totalPagesToShow = 5;
-    if (this.totalPages <= totalPagesToShow) {
-      this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
-    } else {
-      this.pages = [];
-      const startPage = Math.max(2, this.currentPage - 1);
-      const endPage = Math.min(this.totalPages - 1, this.currentPage + 1);
+  generatePagesArray(): void {
+    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    const pagesArray: (number | string)[] = [];
 
-      this.pages.push(1);
-
-      if (startPage > 2) {
-        this.pages.push(-1); // Placeholder for "..."
+    for (let i = 1; i <= this.totalPages; i++) {
+      if (i === 1 || i === this.totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
+        pagesArray.push(i);
+      } else if (pagesArray[pagesArray.length - 1] !== '...') {
+        pagesArray.push('...');
       }
-
-      for (let i = startPage; i <= endPage; i++) {
-        this.pages.push(i);
-      }
-
-      if (endPage < this.totalPages - 1) {
-        this.pages.push(-2); // Placeholder for "..."
-      }
-
-      this.pages.push(this.totalPages);
     }
+
+    this.pages = pagesArray;
   }
 
-  goToPage(page: number) {
-    if (page > 0) {
+  goToPage(page: number | string): void {
+    if (typeof page === 'number' && page > 0 && page <= this.totalPages) {
       this.currentPage = page;
-      this.filterUsers();
+      this.applyFiltersAndPagination();
     }
   }
 
@@ -93,12 +103,12 @@ export class UserComponent implements OnInit {
     }
   }
 
-  onItemsPerPageChange() {
+  onItemsPerPageChange(): void {
     this.currentPage = 1; // Reset to first page
-    this.filterUsers();
+    this.applyFiltersAndPagination();  // Reapply filters and pagination with new itemsPerPage value
   }
 
-  printUsers() {
+  printUsers(): void {
     const printContent = document.getElementById('user-table')?.outerHTML;
     const printWindow = window.open('', '_blank', 'width=800,height=600');
     
@@ -139,11 +149,10 @@ export class UserComponent implements OnInit {
       printWindow.close();
     }
   }
-  
 
-  exportUsers() {
+  exportUsers(): void {
     const csvContent = "data:text/csv;charset=utf-8,"
-      + this.filteredUsers.map(user => `${user.firstName},${user.lastName},${user.email},${user.phone},${user.role}`).join("\n");
+      + this.paginatedUsers.map(user => `${user.firstName},${user.lastName},${user.email},${user.phone},${user.roles.join(', ')}`).join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");

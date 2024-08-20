@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   confirmPassword = '';
   name = '';
   firstName = '';
+  Rle = 'U';  // Initialiser avec 'U'
   errorMessage = '';
   successMessage = '';  // Nouveau champ pour le message de succès
 
@@ -40,101 +41,115 @@ export class LoginComponent implements OnInit {
 
   onSubmit(e: any) {
     e.preventDefault();
-  
+
     // Valider les champs obligatoires
     if (!this.email || !this.password || (!this.isLoginMode && !this.firstName)) {
-      this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
-      return;
+        this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
+        return;
     }
-  
+
+    // Forcer la valeur de Rle
+    this.Rle = this.Rle || 'U';
+
     // Valider le mot de passe en mode inscription
     if (!this.isLoginMode) {
-      if (!this.validatePassword(this.password)) {
-        this.errorMessage = 'Le mot de passe doit contenir au moins 8 caractères, incluant une majuscule, un chiffre, et un caractère spécial, et ne doit pas commencer par un chiffre.';
-        return;
-      }
-  
-      if (this.password !== this.confirmPassword) {
-        this.errorMessage = 'Les mots de passe ne correspondent pas.';
-        return;
-      }
-  
-      this.authService.register(this.firstName, this.name, this.email, this.password).subscribe(
-        response => {
-          if (response.message === 'Utilisateur enregistrer avec succes') {
-            this.isLoginMode = true; // Bascule en mode login
-            this.successMessage = 'Inscription réussie ! Veuillez vous connecter.'; // Message de succès
-            this.email = '';
-            this.password = '';
-            this.confirmPassword = '';
-            this.name = '';
-            this.firstName = '';
-  
-            // Masquer le message après 3 secondes
-            setTimeout(() => {
-              this.successMessage = '';
-            }, 3000);
-          } else {
-            this.errorMessage = 'Une erreur inattendue s\'est produite lors de l\'inscription.';
-          }
-        },
-        error => {
-          if (error.status === 400) {
-            this.errorMessage = error.error.message;
-          } else {
-            this.errorMessage = 'Échec de l\'inscription. Veuillez vérifier vos informations.';
-          }
+        if (!this.validatePassword(this.password)) {
+            this.errorMessage = 'Le mot de passe doit contenir au moins 8 caractères, incluant une majuscule, un chiffre, et un caractère spécial, et ne doit pas commencer par un chiffre.';
+            return;
         }
-      );
-    } else {
-      this.authService.login(this.email, this.password).subscribe(
-        response => {
-          if (response && (response.data && response.data.token) || response.token) {
-            const token = response.data?.token || response.token;
-            localStorage.setItem("token", token);
-  
-            // Après avoir stocké le token, récupérez les informations de l'utilisateur
-            this.authService.getUserProfile().subscribe(
-              user => {
-                console.log('Informations utilisateur:', user); // Afficher les informations utilisateur
-  
-                const role = user.Rle; // Utilisez "Rle" avec un "R" majuscule
-                console.log('Rôle utilisateur:', role); // Afficher le rôle pour le diagnostic
-  
-                // Redirection en fonction du rôle
-                switch (role) {
-                  case 'A':
-                    console.log('Redirection vers /admin/dashboard');
-                    this.router.navigate(['/admin/dashboard']);
-                    break;
-                  case 'C':
-                    console.log('Redirection vers /admin/tickets');
-                    this.router.navigate(['/user-history']);
-                    break;
-                  case 'U':
-                    console.log('Redirection vers /user-history');
-                    this.router.navigate(['/user-history']);
-                    break;
-                  default:
-                    console.error('Rôle utilisateur non reconnu:', role);
-                    this.errorMessage = 'Rôle utilisateur non reconnu.';
-                    break;
+
+        if (this.password !== this.confirmPassword) {
+            this.errorMessage = 'Les mots de passe ne correspondent pas.';
+            return;
+        }
+
+        // Tentative d'inscription
+        this.authService.register(this.firstName, this.name, this.email, this.password, this.Rle).subscribe(
+            response => {
+                if (response && response.message === 'Utilisateur enregistrer avec succes') {
+                    this.successMessage = 'Inscription réussie ! Vous allez être redirigé vers la page de connexion.';
+                    
+                    // Rediriger vers la page de connexion après 3 secondes
+                    setTimeout(() => {
+                        this.router.navigate(['/login']);  // Assurez-vous que '/login' est la bonne route pour votre formulaire de connexion
+                    }, 3000);
+                } else {
+                    this.errorMessage = 'Une erreur inattendue s\'est produite lors de l\'inscription.';
                 }
-              },
-              error => {
-                console.error('Erreur lors de la récupération des informations utilisateur:', error);
-                this.errorMessage = 'Une erreur est survenue lors de la récupération de votre profil.';
-              }
-            );
-          } else {
-            alert("une erreur inattendue s'est produite : token manquant");
-          }
-        },
-        error => {
-          this.errorMessage = 'Échec de la connexion. Veuillez vérifier vos informations.';
-        }
-      );
+            },
+            error => {
+                console.error('Register error:', error);
+
+                // Si le serveur retourne une erreur 400, vérifier le message d'erreur spécifique
+                if (error.response && error.response.status === 400) {
+                    if (error.response.data && error.response.data.message) {
+                        // Affichez le message exact renvoyé par le backend
+                        this.errorMessage = error.response.data.message;
+                    } else {
+                        this.errorMessage = 'Échec de l\'inscription. Veuillez vérifier vos informations.';
+                    }
+                } else {
+                    this.errorMessage = 'Une erreur inattendue s\'est produite. Veuillez réessayer plus tard.';
+                }
+            }
+        );
+    } else {
+        // Traitement du login
+        this.authService.login(this.email, this.password).subscribe(
+            response => {
+                if (response && response.token) {
+                    const token = response.token;
+                    localStorage.setItem("token", token);
+
+                    // Récupérer le profil de l'utilisateur après la connexion
+                    this.authService.getUserProfile().subscribe(
+                        user => {
+                            console.log('Informations utilisateur:', user);
+                            const role = user.Rle;
+                            console.log('Rôle utilisateur:', role);
+
+                            // Redirection en fonction du rôle
+                            switch (role) {
+                                case 'A':
+                                    this.router.navigate(['/admin/dashboard']);
+                                    break;
+                                case 'C':
+                                    this.router.navigate(['/user-history']);
+                                    break;
+                                case 'U':
+                                    this.router.navigate(['/user-history']);
+                                    break;
+                                default:
+                                    console.error('Rôle utilisateur non reconnu:', role);
+                                    this.errorMessage = 'Rôle utilisateur non reconnu.';
+                                    break;
+                            }
+                        },
+                        error => {
+                            console.error('Erreur lors de la récupération des informations utilisateur:', error);
+                            this.errorMessage = 'Une erreur est survenue lors de la récupération de votre profil.';
+                        }
+                    );
+                } else {
+                    this.errorMessage = "Connexion échouée : les informations fournies sont incorrectes.";
+                }
+            },
+            error => {
+                console.error('Login error:', error);
+                if (error.response && error.response.status === 401) {
+                    this.errorMessage = 'Échec de la connexion. Les informations fournies sont incorrectes.';
+                } else {
+                    this.errorMessage = 'Échec de la connexion. Veuillez vérifier vos informations.';
+                }
+            }
+        );
     }
-  }
+}
+
+
+
   
+  
+  
+   
 }

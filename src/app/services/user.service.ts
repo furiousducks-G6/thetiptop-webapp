@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, throwError } from 'rxjs';  // Import throwError here
-import { catchError, tap } from 'rxjs/operators';
+import { from, Observable, BehaviorSubject, throwError } from 'rxjs'; // Assurez-vous que 'BehaviorSubject' est bien importé
+import { map, catchError, tap } from 'rxjs/operators';
+import axios from 'axios';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,42 +12,95 @@ export class UserService {
   private apiUrl = 'http://51.68.174.140:8000/api';
   
   // BehaviorSubject to notify components about profile updates
-  private userProfileUpdatedSource = new BehaviorSubject<void>(undefined);  // No null, use undefined
+  private userProfileUpdatedSource = new BehaviorSubject<void>(undefined);
   userProfileUpdated$ = this.userProfileUpdatedSource.asObservable();
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
+  /**
+   * Update user profile data
+   * @param userData - The data to update the user profile with
+   */
   updateUser(userData: any): Observable<any> {
-    const url = `${this.apiUrl}/user/update`;  // No need to add the ID here
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.authService.getToken()}`,  // Use the auth token
-      'Content-Type': 'application/json'
-    });
+    const token = this.authService.getToken();
+    if (!token) {
+      console.error('Token is missing or invalid');
+      this.router.navigate(['/login']);
+      return throwError(() => new Error('Token is missing ou invalid'));
+    }
 
-    return this.http.put(url, userData, { headers }).pipe(
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
+
+    return from(
+      axios.put(`${this.apiUrl}/user/update`, userData, { headers })
+    ).pipe(
+      map(response => response.data),
       tap(() => {
         // Notify subscribers that the profile has been updated
         this.userProfileUpdatedSource.next();
       }),
       catchError(error => {
         console.error('Error updating user profile:', error);
-        return throwError(() => new Error(error));  // Correct usage of throwError
+        return throwError(() => new Error(error.message || 'Error updating profile'));
       })
     );
   }
 
-  // Ajout de la méthode getUsers pour récupérer la liste des utilisateurs
-  getUsers(): Observable<any[]> {
-    const url = `${this.apiUrl}/users`;  // Utilise le bon endpoint pour récupérer les utilisateurs
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.authService.getToken()}`,  // Utilise le token d'authentification
+  /**
+   * Get a list of users from the API
+   */
+  getUsers(page: number, itemsPerPage: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token is missing or invalid');
+      this.router.navigate(['/login']);
+      return throwError(() => new Error('Token is missing or invalid'));
+    }
+
+    return from(
+      axios.get(`${this.apiUrl}/users`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: {
+          page: page,
+          itemsPerPage: itemsPerPage
+        }
+      })
+    ).pipe(
+      map(response => response.data),
+      catchError(error => {
+        if (error.response && error.response.status === 401) {
+          this.router.navigate(['/login']);
+        }
+        console.error('Error fetching users:', error);
+        return throwError(() => new Error('Error fetching users'));
+      })
+    );
+  }
+
+  getTotalUsersCount(): Observable<number> {
+    const token = this.authService.getToken();
+    if (!token) {
+      console.error('Token is missing or invalid');
+      return throwError(() => new Error('Token is missing or invalid'));
+    }
+
+    const request = axios.get(`${this.apiUrl}/users`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
-    return this.http.get<any[]>(url, { headers }).pipe(
+    return from(request).pipe(
+      map(response => response.data['hydra:totalItems']),
       catchError(error => {
-        console.error('Error fetching users:', error);
-        return throwError(() => new Error(error));  // Gère les erreurs
+        console.error('Error fetching total users count:', error);
+        return throwError(() => error);
       })
     );
   }
+
+  
 }

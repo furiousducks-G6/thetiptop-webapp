@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { from, Observable,throwError } from 'rxjs';
+import axios from 'axios';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -8,15 +9,21 @@ import { Observable } from 'rxjs';
 export class LotService {
   private apiUrl = 'http://51.68.174.140:8000/api/lots';
 
-  constructor(private http: HttpClient) {}
-
   getLots(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+    return from(
+      axios.get(this.apiUrl).then(response => response.data['hydra:member']) // Extraire le tableau des lots
+    );
   }
 
-  getLotById(lotId: string): Observable<any> {
-    // Vérifier si lotId est déjà une URL complète
-    const lotUrl = lotId.startsWith('http') ? lotId : `${this.apiUrl}/${lotId}`;
-    return this.http.get<any>(lotUrl);
+  getTotalLotsCount(): Observable<number> {
+    const request = axios.get(this.apiUrl);
+
+    return from(request).pipe(
+      map(response => response.data['hydra:totalItems']),
+      catchError(error => {
+        console.error('Error fetching total lots count:', error);
+        return throwError(() => error);
+      })
+    );
   }
 }
