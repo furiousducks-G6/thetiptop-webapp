@@ -95,8 +95,8 @@ export class LoginComponent implements OnInit {
         );
     } else {
         // Traitement du login
-        this.authService.login(this.email, this.password).subscribe(
-            response => {
+        this.authService.login(this.email, this.password)
+        .then((response: any) => {
                 if (response && response.token) {
                     const token = response.token;
                     localStorage.setItem("token", token);
@@ -133,8 +133,8 @@ export class LoginComponent implements OnInit {
                 } else {
                     this.errorMessage = "Connexion échouée : les informations fournies sont incorrectes.";
                 }
-            },
-            error => {
+            })
+            .catch((error: any) => {
                 console.error('Login error:', error);
                 if (error.response && error.response.status === 401) {
                     this.errorMessage = 'Échec de la connexion. Les informations fournies sont incorrectes.';
@@ -144,12 +144,5 @@ export class LoginComponent implements OnInit {
             }
         );
     }
-}
-
-
-
-  
-  
-  
-   
+  }
 }

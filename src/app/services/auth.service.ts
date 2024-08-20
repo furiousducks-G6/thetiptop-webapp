@@ -18,23 +18,26 @@ export class AuthService {
     @Inject(PLATFORM_ID) private platformId: object
   ) {}
 
-  login(email: string, password: string): Observable<any> {
-    return from(
-      axios.post(`${this.apiUrl}/login`, { Email: email, password: password })
-    ).pipe(
-      map(response => response.data),
-      tap((response: any) => {
-        const token = response.token;
-        if (token) {
-          this.tokenService.setToken(token);
-          this.router.navigate(['/user-history']);
+  login(email: string, password: string): Promise<any> {
+    return axios.post(`${this.apiUrl}/login`, { Email: email, password: password })
+      .then((response: any) => {
+        let data: any = response.data;
+        if (data) {
+          const token = data.token;
+          if (token) {
+            this.tokenService.setToken(token);
+            this.router.navigate(['/user-history']);
+          }
+
+          return Promise.resolve(data);
         }
-      }),
-      catchError(error => {
-        console.error('Erreur lors de la connexion:', error);
-        return of(null);
+
+        return Promise.reject(new Error('UErreur inattendue'))
       })
-    );
+      .catch((error) => {
+        console.error('Erreur lors de la connexion:', error);
+        return Promise.reject(error);
+      });
   }
 
   register(firstName: string, name: string, email: string, password: string, Rle: string = 'U'): Observable<any> {
