@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { from, Observable,throwError } from 'rxjs';
 import axios from 'axios';
 import { catchError, map } from 'rxjs/operators';
+import { BASE_URL } from '../../utils/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LotService {
-  private apiUrl = 'http://51.68.174.140:8000/api/lots';
+  private apiUrl = BASE_URL + '/lots';
 
   getLots(): Observable<any[]> {
     return from(

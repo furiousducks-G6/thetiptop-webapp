@@ -4,12 +4,13 @@ import { map, catchError, tap } from 'rxjs/operators';
 import axios from 'axios';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { BASE_URL } from '../../utils/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://51.68.174.140:8000/api';
+  private apiUrl = BASE_URL;
   
   // BehaviorSubject to notify components about profile updates
   private userProfileUpdatedSource = new BehaviorSubject<void>(undefined);

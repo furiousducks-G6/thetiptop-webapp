@@ -4,12 +4,13 @@ import { Observable, of, from } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TokenService } from './token.service';
+import { BASE_URL } from '../../utils/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://51.68.174.140:8000/api';
+  private apiUrl = BASE_URL;
 
   constructor(
     private tokenService: TokenService,

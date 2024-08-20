@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../../services/user.service'; // Assurez-vous d'importer UserService si nécessaire
 
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',

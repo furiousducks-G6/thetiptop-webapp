@@ -1,5 +1,7 @@
+import { BASE_URL } from "../utils/config";
+
 export const environment = {
     production: true,
-    apiUrl: 'http://51.68.174.140:8000/api'  // Remplacez par votre URL de production
-  };
+    apiUrl: BASE_URL  // Remplacez par votre URL de production
+};
   

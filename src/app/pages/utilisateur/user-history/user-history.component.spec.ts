@@ -1,4 +1,4 @@
-/*import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserHistoryComponent } from './user-history.component';
 
@@ -21,4 +21,3 @@ describe('UserHistoryComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-*/

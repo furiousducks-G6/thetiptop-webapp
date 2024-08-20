@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import QRCode from 'qrcode';
 import axios from 'axios';
+import { BASE_URL } from '../../../../utils/config';
 
 @Component({
   selector: 'app-user-history',
@@ -15,7 +16,7 @@ import axios from 'axios';
 export class UserHistoryComponent implements OnInit {
   lots: any[] = [];
   searchTerm: string = '';
-  private apiUrl = 'http://51.68.174.140:8000/api';
+  private apiUrl = BASE_URL;
 
   constructor(private router: Router) {}
 

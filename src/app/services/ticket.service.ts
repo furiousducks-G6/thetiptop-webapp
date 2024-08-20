@@ -3,12 +3,13 @@ import axios from 'axios';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { BASE_URL } from '../../utils/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TicketService {
-  private apiUrl = 'http://51.68.174.140:8000/api/tickets';
+  private apiUrl = BASE_URL + '/tickets';
 
   constructor(private authService: AuthService) {}
   getTickets(page: number = 1, itemsPerPage: number = 10): Observable<any> {
