@@ -19,7 +19,7 @@ export class AuthService {
   ) {}
 
   login(email: string, password: string): Promise<any> {
-    return axios.post(`${this.apiUrl}/login`, { Email: email, password: password })
+    return axios.post(`${this.apiUrl}/login`, { Email: email, password: password }, { headers: { 'Content-Type': 'application/json' } })
       .then((response: any) => {
         let data: any = response.data;
         if (data) {
