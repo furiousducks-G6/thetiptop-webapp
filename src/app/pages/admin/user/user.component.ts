@@ -48,7 +48,7 @@ export class UserComponent implements OnInit {
     if (this.searchTerm) {
       filtered = filtered.filter(user =>
         (user.firstName && user.firstName.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-        (user.lastName && user.lastName.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+        (user.name && user.name.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
         (user.email && user.email.toLowerCase().includes(this.searchTerm.toLowerCase()))
       );
     }
@@ -151,7 +151,7 @@ export class UserComponent implements OnInit {
 
   exportUsers(): void {
     const csvContent = "data:text/csv;charset=utf-8,"
-      + this.paginatedUsers.map(user => `${user.firstName},${user.lastName},${user.email},${user.phone},${user.roles.join(', ')}`).join("\n");
+      + this.paginatedUsers.map(user => `${user.firstName},${user.name},${user.email},${user.phone},${user.roles.join(', ')}`).join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");

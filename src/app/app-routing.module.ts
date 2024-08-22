@@ -14,7 +14,9 @@ import { CgvComponent } from './pages/cgv/cgv.component';
 import { MentionlegaleComponent } from './pages/mentionlegale/mentionlegale.component';
 import { AideComponent } from './pages/aide/aide.component';
 import { UserComponent } from './pages/admin/user/user.component';
-import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component'; // Import du composant 404
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component'; 
+import { TombolatComponent } from './pages/admin/tombolat/tombolat.component'; 
+import { ProfiladminComponent } from './pages/admin/profiladmin/profiladmin.component';
 
 // Définition des routes de l'application
 export const routes: Routes = [
@@ -40,6 +42,8 @@ export const routes: Routes = [
       { path: 'tickets', component: TicketsComponent },
       { path: 'lots', component: LotsComponent },
       { path: 'user', component: UserComponent },
+      { path: 'raffle', component: TombolatComponent },
+      { path: 'myprofil', component: ProfiladminComponent },
     ]
   },
   { path: '404', component: PageNotFoundComponent },

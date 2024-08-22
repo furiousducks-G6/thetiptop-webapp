@@ -46,7 +46,10 @@
               "src/styles.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/gsap/dist/gsap.min.js",
+              "src/assets/js/Winwheel.js"
+            ],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {

@@ -37,6 +37,7 @@
       <table id="user-table" class="min-w-full bg-white rounded-lg shadow overflow-hidden">
         <thead>
           <tr class="bg-[#D9EAD3]">
+            <th class="py-2 px-4 border text-left text-[#388E3C]">Id</th>
             <th class="py-2 px-4 border text-left text-[#388E3C]">Prénom</th>
             <th class="py-2 px-4 border text-left text-[#388E3C]">Nom</th>
             <th class="py-2 px-4 border text-left text-[#388E3C]">Email</th>
@@ -46,8 +47,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let user of paginatedUsers" class="hover:bg-gray-100">
+            <td class="py-2 px-4 border">{{ user.id }}</td>
             <td class="py-2 px-4 border">{{ user.firstName }}</td>
-            <td class="py-2 px-4 border">{{ user.lastName }}</td>
+            <td class="py-2 px-4 border">{{ user.name }}</td>
             <td class="py-2 px-4 border">{{ user.Email }}</td>
             <td class="py-2 px-4 border">{{ user.phone }}</td>
             <td class="py-2 px-4 border">{{ user.roles.join(', ') }}</td>

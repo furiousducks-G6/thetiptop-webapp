@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable, BehaviorSubject, throwError } from 'rxjs'; // Assurez-vous que 'BehaviorSubject' est bien importé
+import { from, Observable, BehaviorSubject, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import axios from 'axios';
 import { AuthService } from './auth.service';
@@ -12,22 +12,48 @@ import { BASE_URL } from '../../utils/config';
 export class UserService {
   private apiUrl = BASE_URL;
   
-  // BehaviorSubject to notify components about profile updates
+  // BehaviorSubject pour notifier les composants des mises à jour du profil
   private userProfileUpdatedSource = new BehaviorSubject<void>(undefined);
   userProfileUpdated$ = this.userProfileUpdatedSource.asObservable();
 
   constructor(private authService: AuthService, private router: Router) {}
 
   /**
-   * Update user profile data
-   * @param userData - The data to update the user profile with
+   * Récupérer le profil utilisateur à partir de l'API
+   */
+  getUserProfile(): Observable<any> {
+    const token = this.authService.getToken();
+    if (!token) {
+      console.error('Token manquant ou invalide');
+      this.router.navigate(['/login']);
+      return throwError(() => new Error('Token manquant ou invalide'));
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+
+    return from(
+      axios.get(`${this.apiUrl}/me`, { headers })
+    ).pipe(
+      map(response => response.data),
+      catchError(error => {
+        console.error('Erreur lors de la récupération du profil utilisateur:', error);
+        return throwError(() => new Error('Erreur lors de la récupération du profil utilisateur'));
+      })
+    );
+  }
+
+  /**
+   * Mettre à jour les données du profil utilisateur
+   * @param userData - Les données à mettre à jour pour le profil utilisateur
    */
   updateUser(userData: any): Observable<any> {
     const token = this.authService.getToken();
     if (!token) {
-      console.error('Token is missing or invalid');
+      console.error('Token manquant ou invalide');
       this.router.navigate(['/login']);
-      return throwError(() => new Error('Token is missing ou invalid'));
+      return throwError(() => new Error('Token manquant ou invalide'));
     }
 
     const headers = {
@@ -40,25 +66,25 @@ export class UserService {
     ).pipe(
       map(response => response.data),
       tap(() => {
-        // Notify subscribers that the profile has been updated
+        // Notifier les abonnés que le profil a été mis à jour
         this.userProfileUpdatedSource.next();
       }),
       catchError(error => {
-        console.error('Error updating user profile:', error);
-        return throwError(() => new Error(error.message || 'Error updating profile'));
+        console.error('Erreur lors de la mise à jour du profil utilisateur:', error);
+        return throwError(() => new Error(error.message || 'Erreur lors de la mise à jour du profil utilisateur'));
       })
     );
   }
 
   /**
-   * Get a list of users from the API
+   * Récupérer une liste d'utilisateurs depuis l'API
    */
   getUsers(page: number, itemsPerPage: number): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.error('Token is missing or invalid');
+      console.error('Token manquant ou invalide');
       this.router.navigate(['/login']);
-      return throwError(() => new Error('Token is missing or invalid'));
+      return throwError(() => new Error('Token manquant ou invalide'));
     }
 
     return from(
@@ -75,33 +101,34 @@ export class UserService {
         if (error.response && error.response.status === 401) {
           this.router.navigate(['/login']);
         }
-        console.error('Error fetching users:', error);
-        return throwError(() => new Error('Error fetching users'));
+        console.error('Erreur lors de la récupération des utilisateurs:', error);
+        return throwError(() => new Error('Erreur lors de la récupération des utilisateurs'));
       })
     );
   }
 
+  /**
+   * Récupérer le nombre total d'utilisateurs depuis l'API
+   */
   getTotalUsersCount(): Observable<number> {
     const token = this.authService.getToken();
     if (!token) {
-      console.error('Token is missing or invalid');
-      return throwError(() => new Error('Token is missing or invalid'));
+      console.error('Token manquant ou invalide');
+      return throwError(() => new Error('Token manquant ou invalide'));
     }
 
-    const request = axios.get(`${this.apiUrl}/users`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
 
-    return from(request).pipe(
+    return from(
+      axios.get(`${this.apiUrl}/users`, { headers })
+    ).pipe(
       map(response => response.data['hydra:totalItems']),
       catchError(error => {
-        console.error('Error fetching total users count:', error);
-        return throwError(() => error);
+        console.error('Erreur lors de la récupération du nombre total d\'utilisateurs:', error);
+        return throwError(() => new Error('Erreur lors de la récupération du nombre total d\'utilisateurs'));
       })
     );
   }
-
-  
 }

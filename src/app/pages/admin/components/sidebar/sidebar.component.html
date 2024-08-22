@@ -40,6 +40,24 @@
       <span class="hidden md:inline">Utilisateurs</span>
     </a>
     <a 
+      routerLink="/admin/raffle" 
+      routerLinkActive="bg-green-700"
+      [ngClass]="{ 'bg-green-700': isActive('/admin/raffle') }"
+      class="flex items-center py-2.5 px-4 text-white hover:bg-green-600"
+    >
+      <i class="fa-solid fa-futbol mr-3"></i>
+      <span class="hidden md:inline">Tombolat</span>
+    </a><a 
+    routerLink="/admin/myprofil" 
+    routerLinkActive="bg-green-700"
+    [ngClass]="{ 'bg-green-700': isActive('/admin/myprofil') }"
+    class="flex items-center py-2.5 px-4 text-white hover:bg-green-600"
+    >
+    <i class="fa-solid fa-circle-user mr-3"></i>
+    <i class="fa-duotone fa-solid fa-solar-system"></i>
+    <span class="hidden md:inline">Profil</span>
+   </a>
+    <a 
     (click)="logout()" 
     class="flex items-center py-2.5 px-4 text-white hover:bg-red-600 cursor-pointer"
     >
