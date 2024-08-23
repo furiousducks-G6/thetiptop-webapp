@@ -6,7 +6,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { ProfilComponent } from './pages/utilisateur/profil/profil.component';
 import { UserHistoryComponent } from './pages/utilisateur/user-history/user-history.component';
-import { LayoutadminComponent } from './pages/admin/layoutadmin/layoutadmin.component'; // Import du LayoutAdmin
+import { LayoutadminComponent } from './pages/admin/layoutadmin/layoutadmin.component'; 
 import { DashboardComponent } from './pages/admin/dashboard/dashboard.component';
 import { TicketsComponent } from './pages/admin/tickets/tickets.component';
 import { LotsComponent } from './pages/admin/lots/lots.component';
@@ -46,8 +46,8 @@ export const routes: Routes = [
       { path: 'myprofil', component: ProfiladminComponent },
     ]
   },
-  { path: '404', component: PageNotFoundComponent },
-  { path: '**', redirectTo: '404' } 
+  { path: '**', component: PageNotFoundComponent, pathMatch: "full" },
+ /// { path: '**', redirectTo: '404' } 
 ];
 
 @NgModule({
