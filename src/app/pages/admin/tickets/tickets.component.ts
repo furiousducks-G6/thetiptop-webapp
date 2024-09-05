@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { TicketService } from '../../../services/ticket.service';
+import { AuthService } from '../../../services/auth.service'; // Assurez-vous que le chemin est correct
+
+interface Ticket {
+  code: string;
+  lot: { id: number; name: string; value: number; percentage: number };
+  user?: { firstName: string; phone: string };
+  isClaimed: boolean;
+  selected?: boolean;
+}
 
 @Component({
   selector: 'app-tickets',
@@ -7,81 +16,108 @@ import { TicketService } from '../../../services/ticket.service';
   styleUrls: ['./tickets.component.css']
 })
 export class TicketsComponent implements OnInit {
-  tickets: any[] = [];
-  searchTerm = '';
-  itemsPerPage = 10;
-  currentPage = 1;
+  tickets: Ticket[] = []; // Tous les tickets récupérés du serveur pour la page courante
+  displayedTickets: Ticket[] = []; // Tickets à afficher en fonction de la recherche et de la pagination
+  searchTerm = '';  // Terme de recherche pour filtrer les tickets par code
+  itemsPerPage = 30;  // Nombre d'éléments par page
+  currentPage = 1;  // Page actuelle
+  totalPages = 0;  // Total des pages
+  totalItems = 0;  // Total des éléments
   pages: (number | string)[] = [];
-  totalItems = 0;
+  isLoading = false; // Indicateur de chargement
+  userRole: string = ''; // Rôle de l'utilisateur connecté
 
-  constructor(private ticketService: TicketService) {}
+  message: string | null = null;
+  messageType: 'success' | 'error' | null = null;
+
+  constructor(private ticketService: TicketService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.loadTickets();
+    this.getUserRole(); // Récupérer le rôle de l'utilisateur au chargement du composant
+    this.loadTickets(this.currentPage, this.itemsPerPage);
   }
 
-  loadTickets() {
-    this.ticketService.getTickets(this.currentPage, this.itemsPerPage).subscribe(
+  getUserRole(): void {
+    this.authService.getUserProfile().subscribe(
       (data) => {
-        this.tickets = data.tickets;
-        this.totalItems = data.totalItems;
-        this.calculatePagination();
+        this.userRole = data.Rle; // Assurez-vous que 'Rle' correspond au nom de la propriété dans la réponse de votre API
       },
       (error) => {
-        console.error('Erreur lors du chargement des tickets :', error);
+        console.error('Erreur lors de la récupération du rôle utilisateur :', error);
       }
     );
   }
 
-  filteredTickets() {
-    let filtered = this.tickets;
+  loadTickets(page: number, itemsPerPage: number) {
+    this.isLoading = true;
+    this.ticketService.getTickets(page, itemsPerPage, this.searchTerm).subscribe(
+      (data) => {
+        this.tickets = data.tickets;
+        this.totalItems = data.totalItems;
+        this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+        this.updateDisplayedTickets(); // Mettre à jour les tickets affichés
+        this.calculatePagination(); // Calculer les pages pour la pagination
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des tickets :', error);
+        this.isLoading = false;
+      }
+    );
+  }
 
-    if (this.searchTerm) {
-      filtered = filtered.filter(ticket => 
-        ticket.code.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        ticket.lot.id.toString().includes(this.searchTerm) ||
-        (ticket.user && ticket.user.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()))
-      );
+  applySearch() {
+    // Réinitialiser à la première page lors de la recherche et charger les tickets filtrés par code
+    if (this.searchTerm.trim() !== '') {
+      this.currentPage = 1;
+      this.loadTickets(this.currentPage, this.itemsPerPage);
     }
+  }
 
-    // Pagination logic: Only return the items for the current page
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    return filtered.slice(startIndex, endIndex);
+  updateDisplayedTickets() {
+    // Affiche uniquement les tickets récupérés pour la page actuelle
+    this.displayedTickets = this.tickets;
   }
 
   calculatePagination() {
-    const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
-    const pagesArray: (number | string)[] = [];
+    this.pages = [];
+    const maxPagesToShow = 5; // Nombre maximum de pages à afficher
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = startPage + maxPagesToShow - 1;
 
-    for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
-        pagesArray.push(i);
-      } else if (pagesArray[pagesArray.length - 1] !== '...') {
-        pagesArray.push('...');
-      }
+    if (endPage > this.totalPages) {
+      endPage = this.totalPages;
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
-    this.pages = pagesArray;
+
+    for (let i = startPage; i <= endPage; i++) {
+      this.pages.push(i);
+    }
+
+    if (startPage > 1) this.pages.unshift('...');
+    if (startPage > 2) this.pages.unshift(1);
+
+    if (endPage < this.totalPages) this.pages.push('...');
+    if (endPage < this.totalPages - 1) this.pages.push(this.totalPages);
   }
 
   goToPage(page: number | string) {
-    if (typeof page === 'number') {
+    if (typeof page === 'number' && page !== this.currentPage) {
       this.currentPage = page;
-      this.loadTickets();
+      this.loadTickets(this.currentPage, this.itemsPerPage);
     }
   }
 
   onItemsPerPageChange() {
-    this.currentPage = 1;  // Reset to the first page
-    this.loadTickets();  // Reload the tickets with the new itemsPerPage value
-    this.calculatePagination(); // Recalculate the pagination with the new itemsPerPage
+    this.currentPage = 1;  // Réinitialiser à la première page
+    this.loadTickets(this.currentPage, this.itemsPerPage);  // Recharger les tickets avec la nouvelle valeur d'items par page
   }
 
-  printTicket(ticket: any) {
+  printTicket(ticket: Ticket) {
     const printContent = `
       <h1>Ticket: ${ticket.code}</h1>
       <p>Lot ID: ${ticket.lot.id}</p>
-      <p>Status: ${ticket.is_claimed ? 'Validé' : 'Non Validé'}</p>
+      <p>Status: ${ticket.isClaimed ? 'Validé' : 'Non Validé'}</p>
       <p>Utilisateur: ${ticket.user ? ticket.user.firstName : 'Non assigné'}</p>
       <p>Téléphone: ${ticket.user ? ticket.user.phone : 'Non assigné'}</p>
     `;
@@ -95,7 +131,7 @@ export class TicketsComponent implements OnInit {
     }
   }
 
-  exportTicket(ticket: any) {
+  exportTicket(ticket: Ticket) {
     const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(ticket))}`;
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
@@ -103,5 +139,40 @@ export class TicketsComponent implements OnInit {
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
+  }
+
+  anyTicketSelected(): boolean {
+    return this.displayedTickets.some(ticket => ticket.selected);
+  }
+
+  validateSelectedTickets(): void {
+    const selectedTickets = this.displayedTickets.filter(ticket => ticket.selected);
+    if (selectedTickets.length === 0) {
+      this.showTemporaryMessage('Aucun ticket sélectionné.', 'error');
+      return;
+    }
+
+    selectedTickets.forEach(ticket => {
+      this.ticketService.validateTicket(ticket.code).subscribe(
+        () => {
+          ticket.isClaimed = true;
+          ticket.selected = false;
+          this.showTemporaryMessage('Tickets validés avec succès.', 'success');
+        },
+        (error) => {
+          console.error('Erreur lors de la validation du ticket :', error.message);
+          this.showTemporaryMessage(`Erreur: ${error.message}`, 'error');
+        }
+      );
+    });
+  }
+
+  showTemporaryMessage(message: string, type: 'success' | 'error'): void {
+    this.message = message;
+    this.messageType = type;
+    setTimeout(() => {
+      this.message = null;
+      this.messageType = null;
+    }, 5000);
   }
 }

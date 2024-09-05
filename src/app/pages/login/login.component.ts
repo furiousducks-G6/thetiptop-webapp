@@ -114,7 +114,7 @@ export class LoginComponent implements OnInit {
                                     this.router.navigate(['/admin/dashboard']);
                                     break;
                                 case 'C':
-                                    this.router.navigate(['/user-history']);
+                                    this.router.navigate(['/admin/tickets']);
                                     break;
                                 case 'U':
                                     this.router.navigate(['/user-history']);

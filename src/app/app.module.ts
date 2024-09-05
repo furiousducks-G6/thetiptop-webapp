@@ -25,7 +25,7 @@ import { AideComponent } from './pages/aide/aide.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { TombolatComponent } from './pages/admin/tombolat/tombolat.component';
 import { ProfiladminComponent } from './pages/admin/profiladmin/profiladmin.component';
-
+import { CookieBannerComponent } from './pages/cookie-banner/cookie-banner.component';
 
 
 @NgModule({
@@ -51,6 +51,7 @@ import { ProfiladminComponent } from './pages/admin/profiladmin/profiladmin.comp
     PageNotFoundComponent,
     TombolatComponent,
     ProfiladminComponent,
+    CookieBannerComponent
 
   ],
   imports: [

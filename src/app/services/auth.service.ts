@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import axios from 'axios';
 import { Observable, of, from } from 'rxjs';
-import { tap, catchError, map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TokenService } from './token.service';
 import { BASE_URL } from '../../utils/config';
@@ -11,7 +11,7 @@ import { BASE_URL } from '../../utils/config';
 })
 export class AuthService {
   private apiUrl = BASE_URL;
-
+  private currentUserRole: string | null = null; // Propriété pour stocker le rôle utilisateur
   constructor(
     private tokenService: TokenService,
     private router: Router,
@@ -21,9 +21,11 @@ export class AuthService {
   login(email: string, password: string): Promise<any> {
     return axios.post(`${this.apiUrl}/login`, { Email: email, password: password }, { headers: { 'Content-Type': 'application/json' } })
       .then((response: any) => {
+        console.log('Login response:', response); // Debug
         let data: any = response.data;
         if (data) {
           const token = data.token;
+          console.log('Token:', token); // Debug
           if (token) {
             this.tokenService.setToken(token);
             this.router.navigate(['/user-history']);
@@ -32,7 +34,7 @@ export class AuthService {
           return Promise.resolve(data);
         }
 
-        return Promise.reject(new Error('UErreur inattendue'))
+        return Promise.reject(new Error('Erreur inattendue'));
       })
       .catch((error) => {
         console.error('Erreur lors de la connexion:', error);
@@ -74,7 +76,11 @@ export class AuthService {
         }
       })
     ).pipe(
-      map(response => response.data),
+      map(response => {
+        const userData = response.data;
+        this.currentUserRole = userData.Rle; // Stocker le rôle utilisateur
+        return userData;
+      }),
       catchError(error => {
         console.error('Erreur lors de la récupération du profil utilisateur:', error);
         return of(null);
@@ -84,5 +90,18 @@ export class AuthService {
 
   getToken(): string | null {
     return this.tokenService.getToken();
+  }
+
+  // Obtenir le rôle actuel de l'utilisateur à partir du token JWT
+  getCurrentUserRole(): string | null {
+    return this.currentUserRole; // Retourner le rôle stocké
+  }
+  
+  
+
+  // Vérifier si l'utilisateur est authentifié
+  isAuthenticated(): boolean {
+    const token = this.tokenService.getToken();
+    return !!token; // Retourne true si le token existe, sinon false
   }
 }

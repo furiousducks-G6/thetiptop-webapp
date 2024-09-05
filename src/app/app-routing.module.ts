@@ -17,39 +17,34 @@ import { UserComponent } from './pages/admin/user/user.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component'; 
 import { TombolatComponent } from './pages/admin/tombolat/tombolat.component'; 
 import { ProfiladminComponent } from './pages/admin/profiladmin/profiladmin.component';
+import { AuthGuard } from './services/auth.guard';
 
-// Définition des routes de l'application
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent }, // Route pour la page de connexion
-  
+  { path: 'login', component: LoginComponent },
   {
     path: '', component: LayoutComponent, children: [
       { path: '', component: HomeComponent },
-//      { path: '', redirectTo: 'home', pathMatch: 'full' }, // Redirection de la racine vers la page d'accueil
-      { path: 'home', component: HomeComponent }, // Route pour la page d'accueil
+      { path: 'home', component: HomeComponent },
       { path: 'contact', component: ContactComponent },
-      { path: 'profil', component: ProfilComponent },
-      { path: 'user-history', component: UserHistoryComponent },
-      { path: 'cgv', component: CgvComponent },
+      { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard], data: { expectedRole: ['U'] } },
+      { path: 'user-history', component: UserHistoryComponent, canActivate: [AuthGuard], data: { expectedRole: ['U'] } },
+      { path: 'cgu', component: CgvComponent },
       { path: 'legacy', component: MentionlegaleComponent },
       { path: 'help', component: AideComponent },
     ]
   },
-
   {
     path: 'admin', component: LayoutadminComponent, children: [
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'tickets', component: TicketsComponent },
-      { path: 'lots', component: LotsComponent },
-      { path: 'user', component: UserComponent },
-      { path: 'raffle', component: TombolatComponent },
-      { path: 'myprofil', component: ProfiladminComponent },
+      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { expectedRole: ['A'] } },
+      { path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard], data: { expectedRole: ['A', 'C'] } },
+      { path: 'lots', component: LotsComponent, canActivate: [AuthGuard], data: { expectedRole: ['A'] } },
+      { path: 'user', component: UserComponent, canActivate: [AuthGuard], data: { expectedRole: ['A'] } },
+      { path: 'raffle', component: TombolatComponent, canActivate: [AuthGuard], data: { expectedRole: ['A'] } },
+      { path: 'myprofil', component: ProfiladminComponent, canActivate: [AuthGuard], data: { expectedRole: ['A', 'C'] } },
     ]
   },
-  { path: '**', component: PageNotFoundComponent, pathMatch: "full" },
- /// { path: '**', redirectTo: '404' } 
+  { path: '**', component: PageNotFoundComponent },
 ];
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)], // Importation des routes dans le module racine
   exports: [RouterModule] // Exportation du module de routage pour l'utiliser dans l'application

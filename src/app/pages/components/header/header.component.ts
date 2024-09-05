@@ -77,11 +77,16 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   private checkScreenSize(): void {
     this.isMobile = window.innerWidth < 768;
     const menu = document.getElementById('menu');
-    if (menu && !this.isMobile) {
-      menu.classList.add('hidden');
+    if (menu) {
+      if (this.isMobile) {
+        menu.classList.add('hidden'); // Hide the menu by default on mobile
+      } else {
+        menu.classList.add('hidden'); // Hide the menu by default on desktop
+      }
     }
   }
 
+  // Toggle the menu visibility
   toggleMenu(): void {
     const menu = document.getElementById('menu');
     if (menu) {

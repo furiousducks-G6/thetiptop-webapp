@@ -3,15 +3,19 @@
     <img src="assets/images/logo.png" alt="Logo" class="h-16 md:h-16 rounded-full">
   </div>
   <nav class="mt-10 flex-1">
+    <!-- Afficher ce menu uniquement si le rôle est 'A' -->
     <a 
+      *ngIf="userRole === 'A'" 
       routerLink="/admin/dashboard" 
       routerLinkActive="bg-green-700"
       [ngClass]="{ 'bg-green-700': isActive('/admin/dashboard') }"
       class="flex items-center py-2.5 px-4 text-white hover:bg-green-600"
     >
       <i class="fas fa-tachometer-alt mr-3"></i>
-      <span class="hidden md:inline">Dashboard</span>
+      <span class="hidden md:inline">Tableau de Bord</span>
     </a>
+
+    <!-- Ce menu est toujours affiché -->
     <a 
       routerLink="/admin/tickets" 
       routerLinkActive="bg-green-700"
@@ -21,7 +25,10 @@
       <i class="fas fa-ticket-alt mr-3"></i>
       <span class="hidden md:inline">Tickets</span>
     </a>
+
+    <!-- Afficher ce menu uniquement si le rôle est 'A' -->
     <a 
+      *ngIf="userRole === 'A'" 
       routerLink="/admin/lots" 
       routerLinkActive="bg-green-700"
       [ngClass]="{ 'bg-green-700': isActive('/admin/lots') }"
@@ -30,7 +37,10 @@
       <i class="fas fa-gift mr-3"></i>
       <span class="hidden md:inline">Lots</span>
     </a>
+
+    <!-- Afficher ce menu uniquement si le rôle est 'A' -->
     <a 
+      *ngIf="userRole === 'A'" 
       routerLink="/admin/user" 
       routerLinkActive="bg-green-700"
       [ngClass]="{ 'bg-green-700': isActive('/admin/user') }"
@@ -39,31 +49,37 @@
       <i class="fas fa-users mr-3"></i>
       <span class="hidden md:inline">Utilisateurs</span>
     </a>
+
+    <!-- Afficher ce menu uniquement si le rôle est 'A' -->
     <a 
+      *ngIf="userRole === 'A'" 
       routerLink="/admin/raffle" 
       routerLinkActive="bg-green-700"
       [ngClass]="{ 'bg-green-700': isActive('/admin/raffle') }"
       class="flex items-center py-2.5 px-4 text-white hover:bg-green-600"
     >
       <i class="fa-solid fa-futbol mr-3"></i>
-      <span class="hidden md:inline">Tombolat</span>
-    </a><a 
-    routerLink="/admin/myprofil" 
-    routerLinkActive="bg-green-700"
-    [ngClass]="{ 'bg-green-700': isActive('/admin/myprofil') }"
-    class="flex items-center py-2.5 px-4 text-white hover:bg-green-600"
-    >
-    <i class="fa-solid fa-circle-user mr-3"></i>
-    <i class="fa-duotone fa-solid fa-solar-system"></i>
-    <span class="hidden md:inline">Profil</span>
-   </a>
-    <a 
-    (click)="logout()" 
-    class="flex items-center py-2.5 px-4 text-white hover:bg-red-600 cursor-pointer"
-    >
-    <i class="fas fa-sign-out-alt mr-3"></i>
-    <span class="hidden md:inline">Déconnexion</span>
+      <span class="hidden md:inline">Tombola</span>
     </a>
 
+    <!-- Ce menu est toujours affiché -->
+    <a 
+      routerLink="/admin/myprofil" 
+      routerLinkActive="bg-green-700"
+      [ngClass]="{ 'bg-green-700': isActive('/admin/myprofil') }"
+      class="flex items-center py-2.5 px-4 text-white hover:bg-green-600"
+    >
+      <i class="fa-solid fa-circle-user mr-3"></i>
+      <span class="hidden md:inline">Profil</span>
+    </a>
+
+    <!-- Ce menu est toujours affiché -->
+    <a 
+      (click)="logout()" 
+      class="flex items-center py-2.5 px-4 text-white hover:bg-red-600 cursor-pointer"
+    >
+      <i class="fas fa-sign-out-alt mr-3"></i>
+      <span class="hidden md:inline">Déconnexion</span>
+    </a>
   </nav>
 </div>
