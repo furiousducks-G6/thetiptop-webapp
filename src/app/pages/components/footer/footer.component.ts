@@ -2,6 +2,7 @@ import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { ViewportScroller } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import axios from 'axios'; 
 
 import { HttpClient, HttpHeaders } from '@angular/common/http'; // Importer HttpClient et HttpHeaders
 
@@ -20,7 +21,7 @@ export class FooterComponent {
   showNotification: boolean = false;
 
   // Remplacez par votre clé API Mailchimp et ID de liste
-  private mailchimpApiKey = '1e3d0323f194cfe0062b4561e206843c-us8';
+  private mailchimpApiKey = 'e25aaf3a78b5076e8ebdac2868056abb-us8';
   private mailchimpListId = 'c6a6cec421';
   private mailchimpDataCenter = 'us8';
 
@@ -81,31 +82,34 @@ export class FooterComponent {
       this.showNotificationMessage('Veuillez entrer une adresse e-mail valide.', 'error');
       return;
     }
-
+  
     const url = `https://${this.mailchimpDataCenter}.api.mailchimp.com/3.0/lists/${this.mailchimpListId}/members/`;
     const body = {
       email_address: this.email,
       status: 'subscribed'
     };
-    const headers = new HttpHeaders({
+  
+    // Construire les en-têtes de la requête avec API Key encodée
+    const apiKey = this.mailchimpApiKey;
+    
+    const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Basic ${btoa('anystring:' + this.mailchimpApiKey)}` // Encodage en base64 de l'API Key
-    });
-
-    this.http.post(url, body, { headers }).subscribe(
-      (response) => {
+      'Authorization': `Basic ${btoa(`anystring:${apiKey}`)}` // Encodage en base64 de l'API Key
+    };
+  
+    // Effectuer la requête POST avec Axios
+    axios.post(url, body, { headers })
+      .then(response => {
         console.log('Inscription réussie:', response);
         this.showNotificationMessage('Merci pour votre inscription à notre newsletter!', 'success');
         this.email = ''; // Réinitialiser le champ d'email après l'inscription
-      },
-      (error) => {
+      })
+      .catch(error => {
         console.error('Erreur lors de l\'inscription:', error);
         this.showNotificationMessage('Une erreur s\'est produite lors de l\'inscription. Veuillez réessayer.', 'error');
-      }
-    );
+      });
   }
-
-
+  
   showNotificationMessage(message: string, type: 'success' | 'error') {
     this.notificationMessage = message;
     this.notificationType = type;

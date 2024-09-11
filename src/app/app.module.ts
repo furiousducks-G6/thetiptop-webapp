@@ -26,6 +26,8 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { TombolatComponent } from './pages/admin/tombolat/tombolat.component';
 import { ProfiladminComponent } from './pages/admin/profiladmin/profiladmin.component';
 import { CookieBannerComponent } from './pages/cookie-banner/cookie-banner.component';
+import { LotComponent } from './pages/lot/lot.component';
+import { JeuxComponent } from './pages/jeux/jeux.component';
 
 
 @NgModule({
@@ -51,7 +53,9 @@ import { CookieBannerComponent } from './pages/cookie-banner/cookie-banner.compo
     PageNotFoundComponent,
     TombolatComponent,
     ProfiladminComponent,
-    CookieBannerComponent
+    CookieBannerComponent,
+    LotComponent,
+    JeuxComponent
 
   ],
   imports: [

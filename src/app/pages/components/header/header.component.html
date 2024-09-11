@@ -7,8 +7,8 @@
     <!-- Navigation Links -->
     <nav [ngClass]="{'hidden': isMobile, 'md:flex space-x-4 mx-auto': true}">
       <a href="/home" (click)="scrollToSection('home')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'home'}" class="text-sm md:text-base text-gray-800 hover:text-[#388E3C]">Accueil</a>
-      <a href="/home#lots" (click)="scrollToSection('lots')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'lots'}" class="text-sm md:text-base text-gray-800 hover:text-[#388E3C]">Lots à Gagner</a>
-      <a href="/home#jeux" (click)="scrollToSection('jeux')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'jeux'}" class="text-sm md:text-base text-gray-800 hover:text-[#388E3C]">Jeux</a>
+      <a href="/lots"  (click)="scrollToSection('lots')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'lots'}" class="text-sm md:text-base text-gray-800 hover:text-[#388E3C]">Lots à Gagner</a>
+      <a href="/jeux" (click)="scrollToSection('jeux')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'jeux'}" class="text-sm md:text-base text-gray-800 hover:text-[#388E3C]">Jeux</a>
       <a href="/contact" (click)="scrollToSection('contact')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'contact'}" class="text-sm md:text-base text-gray-800 hover:text-[#388E3C]">Contactez Nous</a>
       <a href="/help" (click)="scrollToSection('help')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'help'}" class="text-sm md:text-base text-gray-800 hover:text-[#388E3C]">Aide ?</a>
     </nav>
@@ -59,7 +59,7 @@
   <!-- Mobile Menu -->
   <div id="menu" [ngClass]="{'hidden': !isMobile, 'flex flex-col space-y-4': true}">
     <a href="/home" (click)="scrollToSection('home')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'home'}" class="block text-sm text-gray-800 hover:text-[#388E3C] px-4 py-2">Accueil</a>
-    <a href="/home#lots" (click)="scrollToSection('lots')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'lots'}" class="block text-sm text-gray-800 hover:text-[#388E3C] px-4 py-2">Lots à Gagner</a>
+    <a href="/lots"  [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'lots'}" class="block text-sm text-gray-800 hover:text-[#388E3C] px-4 py-2">Lots à Gagner</a>
     <a href="/home#jeux" (click)="scrollToSection('jeux')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'jeux'}" class="block text-sm text-gray-800 hover:text-[#388E3C] px-4 py-2">Jeux</a>
     <a href="/contact" (click)="scrollToSection('contact')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'contact'}" class="block text-sm text-gray-800 hover:text-[#388E3C] px-4 py-2">Contactez Nous</a>
     <a href="/help" (click)="scrollToSection('help')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'help'}" class="block text-sm text-gray-800 hover:text-[#388E3C] px-4 py-2">Aide ?</a>

@@ -10,6 +10,8 @@ import { LayoutadminComponent } from './pages/admin/layoutadmin/layoutadmin.comp
 import { DashboardComponent } from './pages/admin/dashboard/dashboard.component';
 import { TicketsComponent } from './pages/admin/tickets/tickets.component';
 import { LotsComponent } from './pages/admin/lots/lots.component';
+import { LotComponent } from './pages/lot/lot.component';
+import { JeuxComponent } from './pages/jeux/jeux.component';
 import { CgvComponent } from './pages/cgv/cgv.component';
 import { MentionlegaleComponent } from './pages/mentionlegale/mentionlegale.component';
 import { AideComponent } from './pages/aide/aide.component';
@@ -31,6 +33,8 @@ export const routes: Routes = [
       { path: 'cgu', component: CgvComponent },
       { path: 'legacy', component: MentionlegaleComponent },
       { path: 'help', component: AideComponent },
+      { path: 'lots', component: LotComponent },
+      { path: 'jeux', component: JeuxComponent },
     ]
   },
   {

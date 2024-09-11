@@ -1,220 +1,152 @@
-/* styles.css */
-body {
-  margin: 0;
-  overflow: hidden;
-  background: linear-gradient(to right, #f3e5ab, #e6d8af);
+
+
+/* Section principale avec un fond rayonné vert */
+.background-spiral {
+  margin-top: 90px;
+  background: conic-gradient(from 180deg at 50% 50%, #4CAF50 0deg, #1B5E20 45deg, #4CAF50 90deg, #1B5E20 135deg, #4CAF50 180deg, #1B5E20 225deg, #4CAF50 270deg, #1B5E20 315deg, #4CAF50 360deg);
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  min-height: 100vh; /* Utilisez min-height au lieu de height */
+  max-width: 100vw; /* Limite la largeur de la section pour éviter le débordement */
+  overflow-x: hidden; /* Supprime l'ascenseur horizontal */
+  overflow-y: hidden;
 }
 
-canvas {
+/* Banderole en haut à gauche */
+.ribbon {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-section {
-  position: relative;
-  overflow: hidden;
-}
-
-.overlay {
-  background: rgba(255, 255, 255, 0.8);
-  padding: 2rem;
-  border-radius: 1rem;
-  position: relative;
-  z-index: 10;
-}
-
-.banner {
-  position: relative;
-  display: inline-block;
-  background: red;
+  top: 150px;
+  left: 10px;
+  background-color: #e74c3c;
   color: white;
   padding: 10px 20px;
-  font-size: 1.5rem;
+  transform: rotate(-10deg);
   font-weight: bold;
-  text-transform: uppercase;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation: bannerWave 5s infinite alternate;
-  margin-top: 20px;
-}
-
-.banner::before,
-.banner::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 15px solid transparent;
-  border-left-color: red;
-}
-
-.banner::before {
-  left: -30px;
-  border-right: 0;
-}
-
-.banner::after {
-  right: -30px;
-  border-left: 0;
-}
-
-.banner::before {
-  left: -30px;
-  border-right: 0;
-}
-
-.banner::after {
-  right: -30px;
-  border-left: 0;
-}
-
-.banner::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 15px solid transparent;
-  border-left-color: red;
-  left: -30px;
-}
-
-.banner::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 15px solid transparent;
-  border-left-color: red;
-  right: -30px;
-  border-right: 0;
-  border-left: 15px solid red;
-}
-
-@keyframes bannerWave {
-  0% {
-      transform: translateY(0);
-  }
-  50% {
-      transform: translateY(-10px);
-  }
-  100% {
-      transform: translateY(0);
-  }
-}
-
-
-
-
-
-
-
-
-
-.overlay {
-  background: rgba(255, 255, 255, 0.8);
-  padding: 2rem;
-  border-radius: 1rem;
-  position: relative;
   z-index: 10;
 }
 
-.flex {
-display: flex;
+/* Ajuster la position du ruban pour les petits écrans */
+@media (max-width: 640px) {
+  .ribbon {
+      top: 100px; /* Descendre la banderole pour la rendre lisible */
+      left: 20px; /* Ajuster l'alignement */
+      padding: 5px 10px; /* Réduire la taille pour les petits écrans */
+      font-size: 0.75rem; /* Réduire la taille du texte */
+      z-index: 1;
+  }
+  .background-spiral {
+    height: 100%;
+  }
 }
 
-.items-center {
-align-items: center;
+/* Style pour le bouton "Commencer" */
+.start-button {
+  position: relative;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  text-align: center;
+  width: 150px;
+  margin: 20px auto;
+  display: block;
+  font-weight: bold;
+  cursor: pointer;
+  overflow: hidden; /* Pour que l'effet ne dépasse pas du bouton */
+  z-index: 1;
+  transition: all 0.3s ease-in-out;
 }
 
-.justify-center {
-justify-content: center;
+/* Effet de vague sur le bouton */
+.start-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: wave 2s infinite ease-in-out;
 }
 
-.space-x-2 > :not(:last-child) {
-margin-right: 0.5rem;
+@keyframes wave {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
 }
 
-.space-x-4 > :not(:last-child) {
-margin-right: 1rem;
+.start-button:hover {
+  background-color: #388E3C;
 }
 
-.md\:flex-row {
-flex-direction: row;
+/* Texte "100% gagnant" */
+.text-winner {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: -20px;
 }
 
-.md\:mr-4 {
-margin-right: 1rem;
+.text-center h2 {
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
 }
 
-.md\:mt-0 {
-margin-top: 0;
-}
-
-.md\:space-x-4 > :not(:last-child) {
-margin-right: 1rem;
-}
-
-
-
-.carousel {
+/* Conteneur des étapes avec l'alignement */
+.steps-container {
   display: flex;
-  overflow-x: scroll;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  flex-wrap: wrap; /* Permet de passer en colonne sur petits écrans */
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+  max-width: 100vw; /* Limite la largeur pour éviter le débordement */
+  padding: 0 10px;  /* Ajoute du padding pour éviter le débordement */
+  overflow-x: hidden;
 }
 
-.carousel::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
-}
-
-.carousel-item {
-  scroll-snap-align: start;
-  flex: 0 0 auto;
-}
-
-button {
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  transform: scale(1.1);
-}
-
-
-
-
-@media (max-width: 767px) {
-  footer .flex-col {
-    flex-direction: column !important;
-    text-align: center;
+/* Centrer les étapes 1, 2 et 3 sur mobile */
+@media (max-width: 640px) {
+  .steps-container {
+      flex-direction: column;
+      gap: 20px;
+      padding: 0 10px;
   }
-  footer .flex-col > div {
-    align-items: center !important;
+
+  .steps-container > div {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
   }
 }
 
-
-/*lot à gagné*/
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
+/* Aligner étape 2 et l'image verticalement */
+.step-2-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.pulse {
-  animation: pulse 2s infinite;
+.image-tea {
+  margin-top: 30px;
+  max-width: 100%;
+  height: auto;
+  overflow: hidden;
 }
 
-main {
-  margin-top: 96px; /* Ajustez cette valeur en fonction de la hauteur de votre en-tête */
+/* Footer */
+footer {
+  color: white;
+  max-width: 100vw; /* Limite la largeur pour éviter le débordement */
+  padding: 0 10px;
 }
