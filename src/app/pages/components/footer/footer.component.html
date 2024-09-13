@@ -10,7 +10,7 @@
       <div class="flex flex-col items-center md:items-start mb-6 md:mb-0">
         <p class="text-gray-800 text-lg font-bold mb-2">TheTipTop</p>
         <div class="flex flex-col space-y-2">
-          <a (click)="scrollToSection('home')" [ngClass]="{'text-green-500 font-bold': currentSection === 'home'}" class="text-gray-600 text-sm hover:text-green-500 cursor-pointer">Accueil</a>
+          <a href="/home"[ngClass]="{'text-green-500 font-bold': currentSection === 'home'}" class="text-gray-600 text-sm hover:text-green-500 cursor-pointer">Accueil</a>
           <a href='/lots' [ngClass]="{'text-green-500 font-bold': currentSection === 'lots'}" class="text-gray-600 text-sm hover:text-green-500 cursor-pointer">Lots à Gagner</a>
           <a href='/jeux' (click)="scrollToSection('jeux')" [ngClass]="{'text-green-500 font-bold': currentSection === 'jeux'}" class="text-gray-600 text-sm hover:text-green-500 cursor-pointer">Jeux</a>
           <a href='/contact' [ngClass]="{'text-green-500 font-bold': currentSection === 'contact'}" class="text-gray-600 text-sm hover:text-green-500 cursor-pointer">Contact</a>

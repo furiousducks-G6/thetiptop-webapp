@@ -114,5 +114,32 @@ export class TicketService {
       })
     );
   }
+
+  // Nouvelle méthode pour rechercher un ticket par son code
+  searchTicketByCode(ticketCode: string): Observable<any> {
+    const token = this.authService.getToken();
+    if (!token) {
+      console.error('Token is missing or invalid');
+      return throwError(() => new Error('Token is missing or invalid'));
+    }
+
+    const request = axios.get(`${this.apirUrl2}/search`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      params: {
+        code: ticketCode  // Paramètre de recherche par code du ticket
+      }
+    });
+
+    return from(request).pipe(
+      map(response => response.data),
+      catchError(error => {
+        console.error('Error searching ticket by code:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   
 }

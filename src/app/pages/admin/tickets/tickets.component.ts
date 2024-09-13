@@ -6,7 +6,7 @@ interface Ticket {
   code: string;
   lot: { id: number; name: string; value: number; percentage: number };
   user?: { firstName: string; phone: string };
-  isClaimed: boolean;
+  is_claimed: boolean;
   selected?: boolean;
 }
 
@@ -117,7 +117,7 @@ export class TicketsComponent implements OnInit {
     const printContent = `
       <h1>Ticket: ${ticket.code}</h1>
       <p>Lot ID: ${ticket.lot.id}</p>
-      <p>Status: ${ticket.isClaimed ? 'Validé' : 'Non Validé'}</p>
+      <p>Status: ${ticket.is_claimed ? 'Validé' : 'Non Validé'}</p>
       <p>Utilisateur: ${ticket.user ? ticket.user.firstName : 'Non assigné'}</p>
       <p>Téléphone: ${ticket.user ? ticket.user.phone : 'Non assigné'}</p>
     `;
@@ -155,7 +155,7 @@ export class TicketsComponent implements OnInit {
     selectedTickets.forEach(ticket => {
       this.ticketService.validateTicket(ticket.code).subscribe(
         () => {
-          ticket.isClaimed = true;
+          ticket.is_claimed = true;
           ticket.selected = false;
           this.showTemporaryMessage('Tickets validés avec succès.', 'success');
         },
@@ -174,5 +174,24 @@ export class TicketsComponent implements OnInit {
       this.message = null;
       this.messageType = null;
     }, 5000);
+  }
+
+  searchTicketByCode() {
+    if (this.searchTerm.trim() === '') {
+      this.displayedTickets = this.tickets; // Si aucun terme de recherche, afficher tous les tickets
+    } else {
+      this.isLoading = true;
+      this.ticketService.searchTicketByCode(this.searchTerm).subscribe(
+        (data) => {
+          this.displayedTickets = [data]; // Afficher uniquement le ticket correspondant
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Erreur lors de la recherche du ticket :', error);
+          this.showTemporaryMessage('Aucun ticket trouvé.', 'error');
+          this.isLoading = false;
+        }
+      );
+    }
   }
 }

@@ -9,14 +9,9 @@
   </div>
 
   <!-- Champ de recherche -->
-  <div class="mb-4">
-    <input 
-      type="text" 
-      placeholder="Rechercher par numéro de ticket, Lot ID ou nom d'utilisateur..." 
-      [(ngModel)]="searchTerm" 
-      (ngModelChange)="applySearch()"  
-      class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#388E3C]"
-    >
+  <div class="search-bar mb-4">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Rechercher un ticket par code" class="border p-2 rounded">
+    <button (click)="searchTicketByCode()" class="bg-green-600 text-white p-2 rounded ml-2">Rechercher</button>
   </div>
 
   <!-- Bouton pour valider les tickets sélectionnés -->
@@ -54,7 +49,7 @@
           <td class="border px-4 py-2 text-center">{{ ticket.lot.name }}</td>
           <td class="border px-4 py-2 text-center">{{ ticket.user?.firstName || 'Non assigné' }}</td>
           <td class="border px-4 py-2 text-center">{{ ticket.user?.phone || 'Non assigné' }}</td>
-          <td class="border px-4 py-2 text-center">{{ ticket.isClaimed ? 'Validé' : 'Non Validé' }}</td>
+          <td class="border px-4 py-2 text-center">{{ ticket.is_claimed ? 'Validé' : 'Non Validé' }}</td>
           <td class="border px-4 py-2 text-center">
             <div class="flex justify-center space-x-2">
               <button (click)="printTicket(ticket)" class="bg-[#D9EAD3] text-black font-bold py-1 px-3 rounded-lg hover:bg-[#388E3C] focus:outline-none focus:ring-2 focus:ring-[#388E3C] focus:ring-opacity-50 shadow-md">

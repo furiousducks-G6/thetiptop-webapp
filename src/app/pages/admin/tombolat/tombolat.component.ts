@@ -22,20 +22,28 @@ export class TombolatComponent implements OnInit {
 
   ngOnInit(): void {
     // Récupérer les utilisateurs
-    this.userService.getUsers(1, 24).subscribe(
+    this.userService.getUserGame().subscribe(
       (data) => {
-        this.users = data['hydra:member'].map((user: any) => user.Email);
-        if (this.users.length > 0) {
-          this.setupWheel(); // Configurer la roue une fois les utilisateurs chargés
+        console.log('Réponse de l\'API :', data); // Affiche la réponse pour vérifier
+  
+        if (Array.isArray(data)) {
+          this.users = data.map((user: any) => user.name); // Pas besoin de 'hydra:member' si c'est un tableau simple
+          if (this.users.length > 0) {
+            this.setupWheel(); // Configurer la roue une fois les utilisateurs chargés
+          } else {
+            console.error('Aucun utilisateur trouvé');
+          }
         } else {
-          console.error('Aucun utilisateur trouvé');
+          console.error('Format inattendu de la réponse de l\'API');
         }
       },
       (error) => {
-        console.error('Erreur lors de la récupération des utilisateurs:', error);
+        console.error('Erreur lors de la récupération des utilisateurs :', error);
       }
     );
   }
+  
+  
 
   // Configurer la roue
   setupWheel() {

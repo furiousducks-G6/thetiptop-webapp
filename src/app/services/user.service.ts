@@ -106,6 +106,34 @@ export class UserService {
       })
     );
   }
+  /**
+   * Route des utilisateur ayant participer au concours
+   */
+  /**
+   * Route des utilisateurs ayant participé au concours
+   */
+  getUserGame(): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('Token manquant ou invalide');
+      this.router.navigate(['/login']);
+      return throwError(() => new Error('Token manquant ou invalide'));
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+
+    return from(
+      axios.get(`${this.apiUrl}/contest/participants`, { headers })
+    ).pipe(
+      map(response => response.data),
+      catchError(error => {
+        console.error('Erreur lors de la récupération des participants au concours:', error);
+        return throwError(() => new Error('Erreur lors de la récupération des participants au concours'));
+      })
+    );
+  }
 
   /**
    * Récupérer le nombre total d'utilisateurs depuis l'API
