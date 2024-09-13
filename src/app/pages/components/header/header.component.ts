@@ -74,25 +74,30 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private checkScreenSize(): void {
+   checkScreenSize(): void {
     this.isMobile = window.innerWidth < 768;
     const menu = document.getElementById('menu');
     if (menu) {
       if (this.isMobile) {
-        menu.classList.add('hidden'); // Hide the menu by default on mobile
+        menu.classList.add('hidden');  // Cacher le menu sur mobile par défaut
       } else {
-        menu.classList.add('hidden'); // Hide the menu by default on desktop
+        menu.classList.add('hidden');  // Cacher le menu par défaut sur desktop
       }
     }
   }
+  
+  
+  
+  
 
   // Toggle the menu visibility
   toggleMenu(): void {
     const menu = document.getElementById('menu');
     if (menu) {
-      menu.classList.toggle('hidden');
+      menu.classList.toggle('hidden');  // Basculer entre affiché/masqué
     }
   }
+  
 
   toggleUserMenu(): void {
     this.showUserMenu = !this.showUserMenu;

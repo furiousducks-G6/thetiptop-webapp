@@ -3,8 +3,8 @@
   }
   
   @media (min-width: 768px) {
-    #menu {
-      display: none !important;
+    nav {
+      display: flex !important;
     }
   }
   

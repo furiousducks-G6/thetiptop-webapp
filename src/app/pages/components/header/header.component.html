@@ -57,7 +57,7 @@
     </button>
   </div>
   <!-- Mobile Menu -->
-  <div id="menu" [ngClass]="{'hidden': !isMobile, 'flex flex-col space-y-4': true}">
+  <div id="menu" class="hidden md:hidden flex-col space-y-4">
     <a href="/home" (click)="scrollToSection('home')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'home'}" class="block text-sm text-gray-800 hover:text-[#388E3C] px-4 py-2">Accueil</a>
     <a href="/lots"  [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'lots'}" class="block text-sm text-gray-800 hover:text-[#388E3C] px-4 py-2">Lots à Gagner</a>
     <a href="/home#jeux" (click)="scrollToSection('jeux')" [ngClass]="{'text-[#388E3C] font-bold': currentSection === 'jeux'}" class="block text-sm text-gray-800 hover:text-[#388E3C] px-4 py-2">Jeux</a>
