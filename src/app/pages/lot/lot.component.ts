@@ -23,7 +23,7 @@ export class LotComponent {
     },
     {
       id: 'detox',
-      title: 'Thé detox ou infusion',
+      title: 'lot Thé detox ou infusion',
       description: 'Thé detox ou infusion pour purifier votre corps',
       image: 'assets/images/detox.jpg',
       isExpanded: false,
@@ -36,7 +36,7 @@ export class LotComponent {
     },
     {
       id: 'signature',
-      title: 'Thé signature',
+      title: 'lot Thé signature',
       description: 'Thé signature aux arômes exclusifs',
       image: 'assets/images/signature.jpg',
       isExpanded: false,
@@ -49,7 +49,7 @@ export class LotComponent {
     },
     {
       id: 'decouverte',
-      title: 'Coffret découverte',
+      title: 'lot Coffret découverte',
       description: 'Coffret découverte pour explorer de nouveaux goûts',
       image: 'assets/images/decouvertewebp.webp',
       isExpanded: false,
@@ -62,7 +62,7 @@ export class LotComponent {
     },
     {
       id: 'gourmand',
-      title: 'Thé gourmand',
+      title: 'lot Thé gourmand',
       description: 'Un thé aux saveurs gourmandes pour les amateurs de douceurs.',
       image: 'assets/images/gourmand.png',
       isExpanded: false,
