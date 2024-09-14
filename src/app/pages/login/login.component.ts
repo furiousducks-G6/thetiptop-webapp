@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   successMessage = '';  // Nouveau champ pour le message de succès
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -66,33 +67,45 @@ export class LoginComponent implements OnInit {
         // Tentative d'inscription
         this.authService.register(this.firstName, this.name, this.email, this.password, this.Rle).subscribe(
             response => {
-                if (response && response.message === 'Utilisateur enregistrer avec succes') {
+                console.log('Response from server:', response);  // Garder ce log pour vérifier la réponse
+        
+                // Nettoie le message de la réponse pour retirer les espaces en trop
+                const cleanedMessage = response.message.trim().replace(/\s+/g, ' ');
+        
+                // Vérifie la structure de la réponse et autorise des variations dans le texte du message
+                if (cleanedMessage.includes('Utilisateur enregistrer avec succes')) {
                     this.successMessage = 'Inscription réussie ! Vous allez être redirigé vers la page de connexion.';
                     
                     // Rediriger vers la page de connexion après 3 secondes
                     setTimeout(() => {
-                        this.router.navigate(['/login']);  // Assurez-vous que '/login' est la bonne route pour votre formulaire de connexion
+                        this.router.navigate(['/login']);  // Vérifiez que '/login' est bien la bonne route
                     }, 3000);
                 } else {
                     this.errorMessage = 'Une erreur inattendue s\'est produite lors de l\'inscription.';
                 }
             },
             error => {
-                console.error('Register error:', error);
-
-                // Si le serveur retourne une erreur 400, vérifier le message d'erreur spécifique
-                if (error.response && error.response.status === 400) {
-                    if (error.response.data && error.response.data.message) {
-                        // Affichez le message exact renvoyé par le backend
-                        this.errorMessage = error.response.data.message;
+                console.error('Register error:', error);  // Ce log est déjà là pour voir l'erreur entière
+            
+                // Gérer le cas où le serveur renvoie une erreur 400
+                if (error.status === 400) {
+                    if (error.error && error.error.message) {
+                        console.log('Message d\'erreur du backend:', error.error.message);  // Vérifier si le message est bien reçu
+                        this.errorMessage = error.error.message;  // Assignation du message d'erreur à la variable pour l'afficher sur l'interface
                     } else {
                         this.errorMessage = 'Échec de l\'inscription. Veuillez vérifier vos informations.';
                     }
                 } else {
                     this.errorMessage = 'Une erreur inattendue s\'est produite. Veuillez réessayer plus tard.';
                 }
+            
+                // Assurer que l'interface est mise à jour
+                this.cdr.detectChanges();  // Assurez-vous d'avoir injecté ChangeDetectorRef dans le constructeur
             }
         );
+        
+        
+               
     } else {
         // Traitement du login
         this.authService.login(this.email, this.password)

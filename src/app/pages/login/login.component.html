@@ -1,4 +1,3 @@
-<app-header></app-header> <!-- Assuming you have a HeaderComponent -->
 
 <!-- Section pour afficher le message de succès -->
 <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
@@ -17,6 +16,10 @@
     <div class="lg:w-1/2 p-6 sm:p-8 lg:p-12">
       <h1 class="text-2xl font-bold mb-4 text-center">{{ isLoginMode ? 'Connexion' : 'Créer son compte sur ThéTipTop' }}</h1>
       
+      <p *ngIf="errorMessage">{{ errorMessage }}</p>
+      <p *ngIf="successMessage">{{ successMessage }}</p>
+
+
       <!-- Section pour afficher le message d'erreur -->
       <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
         <span class="block sm:inline">{{ errorMessage }}</span>
