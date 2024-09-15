@@ -4,10 +4,19 @@ services:
   angular-app:
     container_name: angular-app
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: .  # Utilise le Dockerfile actuel pour construire l'application Angular
     ports:
-      - "80:80"  # Le port 80 est utilisé pour Nginx
+      - "4200:4200"  # Ce port est uniquement pour le développement si nécessaire, pour Angular live reload
     volumes:
-      - .:/usr/src/app  # Montez les fichiers de votre projet pour éviter de reconstruire à chaque modification
+      - .:/usr/src/app  # Montez les fichiers pour éviter de reconstruire à chaque modification
+
+  nginx:
+    container_name: nginx-app
+    image: nginx:alpine
+    depends_on:
+      - angular-app
+    ports:
+      - "80:80"  # Mappe le port 80 du conteneur sur le port 80 local
+    volumes:
+      - ./dist/thetiptop-web/browser:/usr/share/nginx/html  # Montez le dossier de build Angular vers Nginx
     restart: always

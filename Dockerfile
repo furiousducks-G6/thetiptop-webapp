@@ -19,7 +19,7 @@ RUN npm run build -- --configuration production
 FROM nginx:alpine
 
 # Copier les fichiers construits vers le répertoire Nginx
-COPY --from=build /usr/src/app/dist/thetiptop-web/browser /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/thetiptop-web /usr/share/nginx/html
 
 # Exposer le port 80 pour Nginx
 EXPOSE 80
