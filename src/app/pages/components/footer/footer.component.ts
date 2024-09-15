@@ -20,10 +20,6 @@ export class FooterComponent {
   notificationType: 'success' | 'error' = 'success'; // Success ou Error
   showNotification: boolean = false;
 
-  // Remplacez par votre clé API Mailchimp et ID de liste
-  private mailchimpApiKey = 'e25aaf3a78b5076e8ebdac2868056abb-us8';
-  private mailchimpListId = 'c6a6cec421';
-  private mailchimpDataCenter = 'us8';
 
   constructor(
     private newsletterService: NewsletterService,
