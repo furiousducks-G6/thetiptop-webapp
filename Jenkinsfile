@@ -31,7 +31,8 @@ pipeline {
         stage('Run Build') {
             steps {
                 script {
-                    sh "docker-compose -f ${COMPOSE_FILE} run --rm angular-app npm run build -- --prod"
+                    // Remplacez --prod par --configuration production
+                    sh "docker-compose -f ${COMPOSE_FILE} run --rm angular-app npm run build -- --configuration production"
                 }
             }
         }
