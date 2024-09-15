@@ -34,7 +34,6 @@
     "jspdf": "^2.5.1",
     "jwt-decode": "^4.0.0",
     "ngx-quill": "^26.0.5",
-    "particles.js": "^2.0.0",
     "postcss": "^8.4.40",
     "qrcode": "^1.5.4",
     "qs": "^6.13.0",

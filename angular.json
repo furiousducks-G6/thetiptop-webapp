@@ -42,9 +42,14 @@
                 "output": "/assets"
               },
               {
-                  "glob": "robots.txt",
-                  "input": "src/",
-                  "output": "/"
+                "glob": "robots.txt",
+                "input": "src/",
+                "output": "/"
+              },
+              {
+                "glob": "sitemap.xml",     
+                "input": "src/",
+                "output": "/"
               }
             ],
             "styles": [
@@ -133,9 +138,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [
-              "node_modules/particles.js/particles.min.js"
-            ]
+            "scripts": []
           }
         }
       }

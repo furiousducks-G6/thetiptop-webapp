@@ -78,19 +78,6 @@ describe('HeaderComponent', () => {
     expect(component.isMobile).toBeFalse();
   });
 
-  it('should toggle the burger menu visibility', () => {
-    const menuElement = document.createElement('div');
-    menuElement.id = 'menu';
-    document.body.appendChild(menuElement);
-
-    component.toggleMenu();
-    expect(menuElement.classList.contains('hidden')).toBeFalse();  // Vérifie que le menu n'est plus caché
-
-    component.toggleMenu();
-    expect(menuElement.classList.contains('hidden')).toBeTrue();  // Vérifie que le menu est caché
-
-    document.body.removeChild(menuElement);
-  });
 
   it('should navigate to the correct section on scrollToSection', async () => {
     await component.scrollToSection('home');

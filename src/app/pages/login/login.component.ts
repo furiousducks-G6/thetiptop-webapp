@@ -64,48 +64,36 @@ export class LoginComponent implements OnInit {
             return;
         }
 
-        // Tentative d'inscription
+        // Tentative d'inscription                   
         this.authService.register(this.firstName, this.name, this.email, this.password, this.Rle).subscribe(
             response => {
-                console.log('Response from server:', response);  // Garder ce log pour vérifier la réponse
+                console.log('Response from server:', response);
+                if (response && response.message) {
+                    const cleanedMessage = response.message.trim().replace(/\s+/g, ' ');
+                    if (cleanedMessage.includes('Utilisateur enregistrer avec succes')) {
+                        this.errorMessage = ''; // Réinitialiser l'erreur s'il y a un succès
+                        this.successMessage = 'Inscription réussie ! Vous allez être redirigé vers la page de connexion.';
         
-                // Nettoie le message de la réponse pour retirer les espaces en trop
-                const cleanedMessage = response.message.trim().replace(/\s+/g, ' ');
-        
-                // Vérifie la structure de la réponse et autorise des variations dans le texte du message
-                if (cleanedMessage.includes('Utilisateur enregistrer avec succes')) {
-                    this.successMessage = 'Inscription réussie ! Vous allez être redirigé vers la page de connexion.';
-                    
-                    // Rediriger vers la page de connexion après 3 secondes
-                    setTimeout(() => {
-                        this.router.navigate(['/login']);  // Vérifiez que '/login' est bien la bonne route
-                    }, 3000);
+                        // Rediriger vers la page de connexion après 3 secondes
+                        setTimeout(() => {
+                            this.toggleForm(true); 
+                        }, 3000);
+                    } else {
+                        this.errorMessage = 'Une erreur inattendue s\'est produite lors de l\'inscription.';
+                    }
                 } else {
-                    this.errorMessage = 'Une erreur inattendue s\'est produite lors de l\'inscription.';
+                    this.errorMessage = 'Réponse inattendue du serveur.';
                 }
             },
             error => {
-                console.error('Register error:', error);  // Ce log est déjà là pour voir l'erreur entière
-            
-                // Gérer le cas où le serveur renvoie une erreur 400
-                if (error.status === 400) {
-                    if (error.error && error.error.message) {
-                        console.log('Message d\'erreur du backend:', error.error.message);  // Vérifier si le message est bien reçu
-                        this.errorMessage = error.error.message;  // Assignation du message d'erreur à la variable pour l'afficher sur l'interface
-                    } else {
-                        this.errorMessage = 'Échec de l\'inscription. Veuillez vérifier vos informations.';
-                    }
-                } else {
-                    this.errorMessage = 'Une erreur inattendue s\'est produite. Veuillez réessayer plus tard.';
-                }
-            
-                // Assurer que l'interface est mise à jour
-                this.cdr.detectChanges();  // Assurez-vous d'avoir injecté ChangeDetectorRef dans le constructeur
+                console.error('Register error:', error);
+        
+                // Afficher l'erreur renvoyée par le backend sur l'interface
+                this.successMessage = ''; // Réinitialiser le message de succès s'il y a une erreur
+                this.errorMessage = error.message || 'Une erreur inattendue s\'est produite.';
             }
         );
-        
-        
-               
+                            
     } else {
         // Traitement du login
         this.authService.login(this.email, this.password)

@@ -5,7 +5,7 @@ import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TokenService } from './token.service';
 import { BASE_URL } from '../../utils/config';
-
+import { throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -55,10 +55,19 @@ export class AuthService {
       map(response => response.data),
       catchError(error => {
         console.error('Erreur lors de l\'inscription:', error);
-        return of(null);
+        
+        // Si l'erreur provient de la réponse du serveur (comme une erreur 400)
+        if (error.response && error.response.data && error.response.data.message) {
+          // Renvoyer l'erreur avec le message du serveur
+          return throwError(() => new Error(error.response.data.message));
+        }
+        
+        // Renvoyer une erreur générique si aucune réponse spécifique n'est trouvée
+        return throwError(() => new Error('Une erreur inattendue s\'est produite.'));
       })
     );
   }
+
 
   logout(): void {
     this.tokenService.removeToken();
