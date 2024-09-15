@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  angular-app:
+    container_name: angular-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200" # Expose le port 4200 pour accéder à l'application
+    volumes:
+      - .:/usr/src/app # Monte le répertoire actuel sur le conteneur
+      - /usr/src/app/node_modules # Évite les conflits avec node_modules local
+    stdin_open: true # Garder le stdin ouvert pour interagir avec le conteneur
+    tty: true # Activer le support terminal
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Permet de détecter les changements en temps réel dans Docker
+    command: ["ng", "serve", "--host", "0.0.0.0"] # Démarre l'application avec `ng serve`

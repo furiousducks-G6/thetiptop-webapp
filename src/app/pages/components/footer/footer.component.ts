@@ -3,7 +3,7 @@ import { ViewportScroller } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import axios from 'axios'; 
-
+import { NewsletterService } from '../../../services/newsletter.service'; 
 import { HttpClient, HttpHeaders } from '@angular/common/http'; // Importer HttpClient et HttpHeaders
 
 @Component({
@@ -26,6 +26,7 @@ export class FooterComponent {
   private mailchimpDataCenter = 'us8';
 
   constructor(
+    private newsletterService: NewsletterService,
     private viewportScroller: ViewportScroller,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: object,
@@ -83,22 +84,8 @@ export class FooterComponent {
       return;
     }
   
-    // Utilisez le proxy public CORS Anywhere
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    const url = `https://${this.mailchimpDataCenter}.api.mailchimp.com/3.0/lists/${this.mailchimpListId}/members/`;
-    const body = {
-      email_address: this.email,
-      status: 'subscribed'
-    };
-  
-    const apiKey = this.mailchimpApiKey;
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${btoa(`anystring:${apiKey}`)}`
-    };
-  
-    // Effectuer la requête POST via le proxy
-    this.http.post(proxyUrl + url, body, { headers }).subscribe(
+    // Utilisez votre service pour s'abonner à la newsletter
+    this.newsletterService.subscribeToNewsletter(this.email).subscribe(
       (response: any) => {
         console.log('Inscription réussie:', response);
         this.showNotificationMessage('Merci pour votre inscription à notre newsletter!', 'success');
@@ -110,7 +97,6 @@ export class FooterComponent {
       }
     );
   }
-  
   
   showNotificationMessage(message: string, type: 'success' | 'error') {
     this.notificationMessage = message;

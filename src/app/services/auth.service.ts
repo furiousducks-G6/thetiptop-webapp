@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { TokenService } from './token.service';
 import { BASE_URL } from '../../utils/config';
 import { throwError } from 'rxjs';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -77,7 +79,7 @@ export class AuthService {
   getUserProfile(): Observable<any | null> {
     const token = this.tokenService.getToken();
     if (!token) return of(null);
-
+  
     return from(
       axios.get(`${this.apiUrl}/me`, {
         headers: {
@@ -87,7 +89,15 @@ export class AuthService {
     ).pipe(
       map(response => {
         const userData = response.data;
-        this.currentUserRole = userData.Rle; // Stocker le rôle utilisateur
+  
+        // Vérification que le champ "roles" est bien présent dans la réponse
+        if (userData && userData.roles && userData.roles.length > 0) {
+          this.currentUserRole = userData.roles[0]; // Assigner le premier rôle du tableau
+          console.log('Rôle utilisateur récupéré:', this.currentUserRole); // Debug
+        } else {
+          console.warn('Rôle utilisateur manquant ou incorrect dans la réponse API');
+          this.currentUserRole = null; // Assigner à null si le rôle n'est pas présent
+        }
         return userData;
       }),
       catchError(error => {
@@ -96,6 +106,9 @@ export class AuthService {
       })
     );
   }
+  
+  
+  
 
   getToken(): string | null {
     return this.tokenService.getToken();
@@ -103,6 +116,7 @@ export class AuthService {
 
   // Obtenir le rôle actuel de l'utilisateur à partir du token JWT
   getCurrentUserRole(): string | null {
+
     return this.currentUserRole; // Retourner le rôle stocké
   }
   
