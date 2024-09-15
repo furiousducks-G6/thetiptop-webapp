@@ -7,11 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "4200:4200"
+      - "80:80"  # Le port 80 est utilisé pour Nginx
     volumes:
-      - .:/usr/src/app
-    stdin_open: true
-    tty: true
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    command: ["ng", "serve", "--host", "0.0.0.0"]
+      - .:/usr/src/app  # Montez les fichiers de votre projet pour éviter de reconstruire à chaque modification
+    restart: always
