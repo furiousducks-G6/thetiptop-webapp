@@ -3,6 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { Observable, of } from 'rxjs';
 import { AuthService } from './auth.service';
 import { tap, map, catchError } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,27 +15,24 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-  
-    const expectedRoles: string[] = next.data['expectedRole']; // Rôles attendus
-    
+
+    const expectedRoles = next.data['expectedRole'];
+
     return this.authService.getUserProfile().pipe(
       map(user => {
-        const userRole = this.authService.getCurrentUserRole(); // Récupère le rôle actuel de l'utilisateur
-  
-        console.log('Rôles attendus:', expectedRoles); // Debug
-        console.log('Rôle utilisateur:', userRole); // Debug
-  
-        // Vérifie si l'utilisateur est authentifié et si son rôle correspond à l'un des rôles attendus
-        if (this.authService.isAuthenticated() && userRole && expectedRoles.includes(userRole)) {
-          return true; // Accès autorisé
+        const userRole = this.authService.getCurrentUserRole();
+        console.log('Expected Roles:', expectedRoles); // Debug
+        console.log('User Role:', userRole); // Debug
+
+        if (this.authService.isAuthenticated() && expectedRoles.includes(userRole)) {
+          return true;
         } else {
-          console.warn(`Accès refusé : rôle attendu (${expectedRoles}), rôle utilisateur actuel (${userRole})`);
-          this.router.navigate(['/404']); // Redirection vers une page d'erreur si accès refusé
+          this.router.navigate(['/404']);
           return false;
         }
       }),
       catchError(() => {
-        this.router.navigate(['/404']); // Redirection en cas d'erreur
+        this.router.navigate(['/404']);
         return of(false);
       })
     );
