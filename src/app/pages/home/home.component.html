@@ -8,11 +8,11 @@
     </div>
     
     <section class="background-spiral">
-      <h2 class="text-center text-2xl md:text-4xl mgr">GRAND JEU CONCOURS</h2><br>
+      <h1 class="text-center text-2xl md:text-4xl mgr">GRAND JEU CONCOURS</h1><br>
       <p class="text-winner text-lg md:text-2xl mgr">100% gagnant !!!</p>
     
       <!-- Grand texte central -->
-      <h1 class="text-center text-4xl md:text-6xl font-extrabold text-white mt-4 mgr">THÉ TIP TOP</h1>
+      <h2 class="text-center text-4xl md:text-6xl font-extrabold text-white mt-4 mgr">THÉ TIP TOP</h2>
       <p class="text-center text-xl md:text-3xl text-white font-bold mgr">500 000 LOTS à gagner !</p>
     
       <!-- Steps and image of tea -->
@@ -47,7 +47,7 @@
           </div>
     
           <div class="image-tea">
-            <img src="assets/images/tea.png" alt="Boîte de thé - Lot à gagner" class="w-80">
+            <img src="assets/images/tea.webp" alt="Boîte de thé - Lot à gagner" class="w-80" loading="lazy">
           </div>
         </div>
     
@@ -83,11 +83,11 @@
         
         <!-- Infuseur à thé -->
         <article class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 w-full max-w-md mx-auto text-left">
-          <img src="assets/images/infuseur.png" alt="Infuseur à thé" class="absolute inset-0 h-full w-full object-cover">
+          <img src="assets/images/infuseur.webp" alt="Infuseur à thé" class="absolute inset-0 h-full w-full object-cover" loading="lazy"> 
           <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40"></div>
           <div class="z-10 flex justify-between items-center mt-3">
             <h3 class="text-3xl font-bold text-white">Infuseur à thé</h3>
-            <a [routerLink]="['/lots']" [queryParams]="{ id: 'infuseur' }" class="bg-green-500 text-white w-12 h-12 rounded-full flex justify-center items-center hover:bg-green-600 transition">
+            <a [routerLink]="['/lots']" [queryParams]="{ id: 'infuseur' }" class="bg-green-500 text-white w-12 h-12 rounded-full flex justify-center items-center hover:bg-green-600 transition" aria-label="Voir Infuseur">
               <i class="fas fa-arrow-right transform transition-transform duration-300 ease-in-out hover:translate-x-2"></i>
             </a>
           </div>
@@ -95,11 +95,11 @@
     
         <!-- Thé detox ou infusion -->
         <article class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 w-full max-w-md mx-auto text-left">
-          <img src="assets/images/detox.jpg" alt="Thé detox ou infusion" class="absolute inset-0 h-full w-full object-cover">
+          <img src="assets/images/detox.webp" alt="Thé detox ou infusion" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
           <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40"></div>
           <div class="z-10 flex justify-between items-center mt-3">
             <h3 class="text-3xl font-bold text-white">Thé detox ou infusion</h3>
-            <a [routerLink]="['/lots']" [queryParams]="{ id: 'detox' }" class="bg-green-500 text-white w-12 h-12 rounded-full flex justify-center items-center hover:bg-green-600 transition">
+            <a [routerLink]="['/lots']" [queryParams]="{ id: 'detox' }" class="bg-green-500 text-white w-12 h-12 rounded-full flex justify-center items-center hover:bg-green-600 transition" aria-label="Voir Detox">
               <i class="fas fa-arrow-right transform transition-transform duration-300 ease-in-out hover:translate-x-2"></i>
             </a>
           </div>
@@ -107,11 +107,11 @@
     
         <!-- Thé signature -->
         <article class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 w-full max-w-md mx-auto text-left">
-          <img src="assets/images/signature.jpg" alt="Thé signature" class="absolute inset-0 h-full w-full object-cover">
+          <img src="assets/images/signature.webp" alt="Thé signature" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
           <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40"></div>
           <div class="z-10 flex justify-between items-center mt-3">
             <h3 class="text-3xl font-bold text-white">Thé signature</h3>
-            <a [routerLink]="['/lots']" [queryParams]="{ id: 'signature' }" class="bg-green-500 text-white w-12 h-12 rounded-full flex justify-center items-center hover:bg-green-600 transition">
+            <a [routerLink]="['/lots']" [queryParams]="{ id: 'signature' }" class="bg-green-500 text-white w-12 h-12 rounded-full flex justify-center items-center hover:bg-green-600 transition" aria-label="Voir Signature">
               <i class="fas fa-arrow-right transform transition-transform duration-300 ease-in-out hover:translate-x-2"></i>
             </a>
           </div>
@@ -119,11 +119,11 @@
     
         <!-- Coffret découverte -->
         <article class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 w-full max-w-md mx-auto text-left">
-          <img src="assets/images/decouvertewebp.webp" alt="Coffret découverte" class="absolute inset-0 h-full w-full object-cover">
+          <img src="assets/images/decouvertewebp.webp" alt="Coffret découverte" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
           <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40"></div>
           <div class="z-10 flex justify-between items-center mt-3">
             <h3 class="text-3xl font-bold text-white">Coffret découverte</h3>
-            <a [routerLink]="['/lots']" [queryParams]="{ id: 'decouverte' }" class="bg-green-500 text-white w-12 h-12 rounded-full flex justify-center items-center hover:bg-green-600 transition">
+            <a [routerLink]="['/lots']" [queryParams]="{ id: 'decouverte' }" class="bg-green-500 text-white w-12 h-12 rounded-full flex justify-center items-center hover:bg-green-600 transition" aria-label="Voir Découverte">
               <i class="fas fa-arrow-right transform transition-transform duration-300 ease-in-out hover:translate-x-2"></i>
             </a>
           </div>
