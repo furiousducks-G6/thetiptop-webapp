@@ -101,4 +101,5 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof document !== 'undefined';
   }
+  
 }

@@ -83,32 +83,34 @@ export class FooterComponent {
       return;
     }
   
+    // Utilisez le proxy public CORS Anywhere
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const url = `https://${this.mailchimpDataCenter}.api.mailchimp.com/3.0/lists/${this.mailchimpListId}/members/`;
     const body = {
       email_address: this.email,
       status: 'subscribed'
     };
   
-    // Construire les en-têtes de la requête avec API Key encodée
     const apiKey = this.mailchimpApiKey;
-    
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Basic ${btoa(`anystring:${apiKey}`)}` // Encodage en base64 de l'API Key
+      'Authorization': `Basic ${btoa(`anystring:${apiKey}`)}`
     };
   
-    // Effectuer la requête POST avec Axios
-    axios.post(url, body, { headers })
-      .then(response => {
+    // Effectuer la requête POST via le proxy
+    this.http.post(proxyUrl + url, body, { headers }).subscribe(
+      (response: any) => {
         console.log('Inscription réussie:', response);
         this.showNotificationMessage('Merci pour votre inscription à notre newsletter!', 'success');
         this.email = ''; // Réinitialiser le champ d'email après l'inscription
-      })
-      .catch(error => {
+      },
+      (error: any) => {
         console.error('Erreur lors de l\'inscription:', error);
         this.showNotificationMessage('Une erreur s\'est produite lors de l\'inscription. Veuillez réessayer.', 'error');
-      });
+      }
+    );
   }
+  
   
   showNotificationMessage(message: string, type: 'success' | 'error') {
     this.notificationMessage = message;
