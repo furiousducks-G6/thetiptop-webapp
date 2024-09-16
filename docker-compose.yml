@@ -16,7 +16,7 @@ services:
     depends_on:
       - angular-app
     ports:
-      - "8080:80"
+      - "8082:80"
     volumes:
       - ./dist/thetiptop-web/browser:/usr/share/nginx/html
       - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Utilisez le fichier nginx.conf personnalisé
