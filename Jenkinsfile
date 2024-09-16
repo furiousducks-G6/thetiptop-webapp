@@ -14,6 +14,11 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                script {
+                    // Output the current branch for debugging
+                    def branchName = env.BRANCH_NAME ?: sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    echo "Current branch: ${branchName}"
+                }
             }
         }
 
