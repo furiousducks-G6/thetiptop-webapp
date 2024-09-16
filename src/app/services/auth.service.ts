@@ -19,28 +19,25 @@ export class AuthService {
   ) {}
 
   login(email: string, password: string): Promise<any> {
-    return axios.post(`${this.apiUrl}/login`, { Email: email, password: password }, { headers: { 'Content-Type': 'application/json' } })
-      .then((response: any) => {
-        console.log('Login response:', response); // Debug
-        let data: any = response.data;
-        if (data) {
-          const token = data.token;
-          console.log('Token:', token); // Debug
-          if (token) {
-            this.tokenService.setToken(token);
-            this.router.navigate(['/user-history']);
-          }
-
-          return Promise.resolve(data);
-        }
-
-        return Promise.reject(new Error('Erreur inattendue'));
-      })
-      .catch((error) => {
+    return fetch(`${this.apiUrl}/login`, {
+        method: 'POST',
+        mode: 'no-cors', // This is the key option
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ Email: email, password: password })
+    })
+    .then(() => {
+        // Response is opaque in no-cors mode, so we cannot process it
+        console.log('Login request made with no-cors mode');
+        return Promise.resolve();
+    })
+    .catch((error) => {
         console.error('Erreur lors de la connexion:', error);
         return Promise.reject(error);
-      });
-  }
+    });
+}
+
 
   register(firstName: string, name: string, email: string, password: string, Rle: string = 'U'): Observable<any> {
     return from(

@@ -8,6 +8,7 @@ pipeline {
         SLACK_CHANNEL = '#social'
         SLACK_CREDENTIALS_ID = 'slack'
         WORKDIR = '/usr/src/app'
+        BRANCH_NAME = '' // Define a global variable for the branch name
     }
 
     stages {
@@ -15,8 +16,8 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    def branchName = env.GIT_BRANCH ?: sh(script: 'git rev-parse --abbrev-ref HEAD || echo "detached"', returnStdout: true).trim()
-                    echo "Current branch: ${branchName}"
+                    BRANCH_NAME = env.GIT_BRANCH ?: sh(script: 'git rev-parse --abbrev-ref HEAD || echo "detached"', returnStdout: true).trim()
+                    echo "Current branch: ${BRANCH_NAME}"
                 }
             }
         }
@@ -25,7 +26,6 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        // Build the Docker image (this will also build the Angular app)
                         sh "docker-compose -f ${COMPOSE_FILE} build"
                     }
                 }
@@ -33,18 +33,18 @@ pipeline {
         }
 
         stage('Deploy to Dev') {
-            when {
-                expression {
-                    return branchName == 'develop'
-                }
-            }
-            steps {
-                script {
-                    // Start the containers
-                    sh "docker-compose -f ${COMPOSE_FILE} up -d"
-                }
-            }
+    when {
+        expression {
+
+            return BRANCH_NAME == 'origin/develop' // Use the global variable
         }
+    }
+    steps {
+        script {
+            sh "docker-compose -f ${COMPOSE_FILE} up -d"
+        }
+    }
+}
 
         stage('Push to Docker Hub') {
             steps {
