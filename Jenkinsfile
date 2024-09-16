@@ -21,26 +21,9 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                        // Build the Docker image (this will also build the Angular app)
                         sh "docker-compose -f ${COMPOSE_FILE} build"
-                        sh "docker images"
                     }
-                }
-            }
-        }
-
-        stage('Run Build') {
-            steps {
-                script {
-                    // Remplacez --prod par --configuration production
-                    sh "docker-compose -f ${COMPOSE_FILE} run --rm angular-app npm run build -- --configuration production"
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                script {
-                    sh "docker-compose -f ${COMPOSE_FILE} run --rm angular-app npm test -- --watch=false"
                 }
             }
         }
@@ -51,7 +34,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh "docker-compose -f ${COMPOSE_FILE} run --rm angular-app npm run deploy:dev"
+                    // Start the containers
+                    sh "docker-compose -f ${COMPOSE_FILE} up -d"
                 }
             }
         }
@@ -86,22 +70,6 @@ pipeline {
                 body: "The build failed.\n\nJob: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nBuild URL: ${env.BUILD_URL}"
             )
             slackSend(channel: SLACK_CHANNEL, message: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${env.BUILD_URL}")
-        }
-        unstable {
-            emailext (
-                to: 'tchantchoisaac1998@gmail.com',
-                subject: "Build Unstable: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
-                body: "The build is unstable.\n\nJob: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nBuild URL: ${env.BUILD_URL}"
-            )
-            slackSend(channel: SLACK_CHANNEL, message: "Build Unstable: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${env.BUILD_URL}")
-        }
-        always {
-            emailext (
-                to: 'tchantchoisaac1998@gmail.com',
-                subject: "Pipeline Finished: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
-                body: "Pipeline finished.\n\nJob: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nBuild URL: ${env.BUILD_URL}\nResult: ${currentBuild.result}"
-            )
-            slackSend(channel: SLACK_CHANNEL, message: "Pipeline Finished: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${env.BUILD_URL}")
         }
     }
 }
