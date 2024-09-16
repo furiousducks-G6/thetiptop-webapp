@@ -15,8 +15,7 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    // Output the current branch for debugging
-                    def branchName = env.BRANCH_NAME ?: sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    def branchName = env.GIT_BRANCH ?: sh(script: 'git rev-parse --abbrev-ref HEAD || echo "detached"', returnStdout: true).trim()
                     echo "Current branch: ${branchName}"
                 }
             }
@@ -35,7 +34,9 @@ pipeline {
 
         stage('Deploy to Dev') {
             when {
-                branch 'develop'
+                expression {
+                    return branchName == 'develop'
+                }
             }
             steps {
                 script {
