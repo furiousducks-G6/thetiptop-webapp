@@ -18,6 +18,7 @@ import { AideComponent } from './pages/aide/aide.component';
 import { UserComponent } from './pages/admin/user/user.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component'; 
 import { TombolatComponent } from './pages/admin/tombolat/tombolat.component'; 
+import { NewsletterComponent } from './pages/admin/newsletter/newsletter.component'; 
 import { ProfiladminComponent } from './pages/admin/profiladmin/profiladmin.component';
 import { AuthGuard } from './services/auth.guard';
 
@@ -45,6 +46,7 @@ export const routes: Routes = [
       { path: 'lots', component: LotsComponent, canActivate: [AuthGuard], data: { expectedRole: ['A'] } },
       { path: 'user', component: UserComponent, canActivate: [AuthGuard], data: { expectedRole: ['A'] } },
       { path: 'raffle', component: TombolatComponent, canActivate: [AuthGuard], data: { expectedRole: ['A'] } },
+      { path: 'newsletter', component: NewsletterComponent, canActivate: [AuthGuard], data: { expectedRole: ['A'] } },
       { path: 'myprofil', component: ProfiladminComponent, canActivate: [AuthGuard], data: { expectedRole: ['A', 'C'] } },
     ]
   },

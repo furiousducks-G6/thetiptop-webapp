@@ -28,7 +28,7 @@ import { ProfiladminComponent } from './pages/admin/profiladmin/profiladmin.comp
 import { CookieBannerComponent } from './pages/cookie-banner/cookie-banner.component';
 import { LotComponent } from './pages/lot/lot.component';
 import { JeuxComponent } from './pages/jeux/jeux.component';
-
+import { NewsletterComponent } from './pages/admin/newsletter/newsletter.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +55,8 @@ import { JeuxComponent } from './pages/jeux/jeux.component';
     ProfiladminComponent,
     CookieBannerComponent,
     LotComponent,
-    JeuxComponent
+    JeuxComponent,
+    NewsletterComponent
 
   ],
   imports: [

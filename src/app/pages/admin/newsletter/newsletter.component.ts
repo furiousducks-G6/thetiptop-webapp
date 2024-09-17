@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NewsletterService } from '../../../services/newsletter.service'; // Assurez-vous que le chemin est correct
+import { NewsletterService } from '../../../services/newsletter.service';
+import emailjs, { EmailJSResponseStatus } from '@emailjs/browser';
 
 @Component({
   selector: 'app-newsletter',
@@ -7,23 +8,29 @@ import { NewsletterService } from '../../../services/newsletter.service'; // Ass
   styleUrls: ['./newsletter.component.css']
 })
 export class NewsletterComponent implements OnInit {
-  subscribers: any[] = []; // Tableau pour stocker les abonnés
-  searchTerm = ''; // Terme de recherche
+  subscribers: any[] = []; // Tableau pour stocker les emails des abonnés venant de l'API
+  searchTerm = ''; // Filtrage des abonnés
   itemsPerPage = 10; // Nombre d'éléments par page
   currentPage = 1; // Page courante
-  pages: (number | string)[] = []; // Tableau de pagination
+  pages: (number | string)[] = []; // Pagination
+
+  emailBody: string = ''; // Contenu de l'email
+  attachment: File | null = null; // Fichier joint
+  attachmentName: string = ''; // Nom du fichier joint
+  confirmationMessage: string = ''; // Message de confirmation
+  success: boolean = false; // Indicateur de succès ou échec
 
   constructor(private newsletterService: NewsletterService) {}
 
   ngOnInit(): void {
-    this.loadSubscribers(); // Chargement initial des abonnés
+    this.loadSubscribers(); // Charger les abonnés dès le chargement du composant
   }
 
-  // Charger tous les abonnés à la newsletter
-  loadSubscribers() {
+  // Charger tous les emails d'abonnés via l'API
+  loadSubscribers(): void {
     this.newsletterService.getAllSubscribedEmails().subscribe(
       (data) => {
-        this.subscribers = data; // Stocker les abonnés
+        this.subscribers = data; // Stocker les abonnés récupérés dans le tableau
         this.calculatePagination(); // Calculer la pagination
       },
       (error) => {
@@ -32,33 +39,48 @@ export class NewsletterComponent implements OnInit {
     );
   }
 
-  // Filtrer les abonnés en fonction du terme de recherche
-  filteredSubscribers() {
-    let filtered = this.subscribers;
+  // Gestionnaire de sélection de fichier
+  onFileSelected(event: any): void {
+    if (event.target.files.length > 0) {
+      this.attachment = event.target.files[0]; // Store selected file
+      this.attachmentName = this.attachment ? this.attachment.name : ''; // Check if attachment is not null
+    }
+  }
 
-    if (this.searchTerm) {
-      filtered = filtered.filter(subscriber => 
-        subscriber.email.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
+  // Envoyer la newsletter via EmailJS
+  sendNewsletter(e: Event): void {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('emailBody', this.emailBody);
+
+    if (this.attachment) {
+      formData.append('attachment', this.attachment, this.attachment.name);
     }
 
-    // Pagination des abonnés filtrés
-    return filtered.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage);
+    // Utiliser EmailJS pour envoyer l'email
+    emailjs.sendForm('service_3q6e7nn', 'template_3q7il3i', e.target as HTMLFormElement, 'BwsWqc0u0BYPTQpRK')
+      .then((result: EmailJSResponseStatus) => {
+        this.confirmationMessage = 'Votre message a été envoyé avec succès !';
+        this.success = true;
+        this.resetForm();
+      }, (error) => {
+        this.confirmationMessage = 'Une erreur s\'est produite lors de l\'envoi de votre message.';
+        this.success = false;
+      });
+  }
+
+  // Réinitialiser le formulaire
+  resetForm() {
+    this.emailBody = '';
+    this.attachment = null;
+    this.attachmentName = '';
   }
 
   // Calculer la pagination
   calculatePagination() {
     const totalPages = Math.ceil(this.subscribers.length / this.itemsPerPage);
-    const pagesArray: (number | string)[] = [];
-
-    for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
-        pagesArray.push(i);
-      } else if (pagesArray[pagesArray.length - 1] !== '...') {
-        pagesArray.push('...');
-      }
-    }
-    this.pages = pagesArray;
+    this.pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
   // Aller à une page spécifique
@@ -67,25 +89,5 @@ export class NewsletterComponent implements OnInit {
       this.currentPage = page;
       this.calculatePagination();
     }
-  }
-
-  // Désinscrire un abonné
-  unsubscribe(email: string) {
-    this.newsletterService.unsubscribeFromNewsletter(email).subscribe(
-      () => {
-        // Retirer l'abonné de la liste après désinscription
-        this.subscribers = this.subscribers.filter(subscriber => subscriber.email !== email);
-        this.calculatePagination(); // Recalculer la pagination après modification
-      },
-      (error) => {
-        console.error('Erreur lors de la désinscription :', error);
-      }
-    );
-  }
-
-  // Fonctionnalité pour ajouter un abonné (peut être modifiée en fonction des besoins)
-  addSubscriber() {
-    console.log('Ajouter un abonné');
-    // Implémenter l'ajout d'un nouvel abonné si nécessaire
   }
 }

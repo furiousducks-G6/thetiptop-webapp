@@ -9,6 +9,7 @@ import { BASE_URL } from '../../utils/config';
 })
 export class NewsletterService {
   private apiUrl = BASE_URL + '/newsletter';
+  private apiUrl2 = BASE_URL + '/api/subscribers';
 
   // Méthode pour s'inscrire à la newsletter
   subscribeToNewsletter(email: string): Observable<any> {
@@ -38,7 +39,7 @@ export class NewsletterService {
 
   // Méthode pour obtenir toutes les adresses e-mail inscrites à la newsletter
   getAllSubscribedEmails(): Observable<any[]> {
-    const request = axios.get(this.apiUrl);
+    const request = axios.get(this.apiUrl2);
 
     return from(request).pipe(
       map(response => response.data), // Modifiez cela en fonction de la structure de votre API

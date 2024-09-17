@@ -72,7 +72,16 @@
       <i class="fa-solid fa-circle-user mr-3"></i>
       <span class="hidden md:inline">Profil</span>
     </a>
-
+    <a 
+    routerLink="/admin/newsletter" 
+    routerLinkActive="bg-green-700"
+    [ngClass]="{ 'bg-green-700': isActive('/admin/ewsletter') }"
+    class="flex items-center py-2.5 px-4 text-white hover:bg-green-600"
+  >
+    <i class="fa-solid fa-envelope mr-3"> </i>
+    <span class="hidden md:inline"> Newsletter</span>
+  </a>
+    
     <!-- Ce menu est toujours affiché -->
     <a 
       (click)="logout()" 
