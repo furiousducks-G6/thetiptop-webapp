@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   angular-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     ports:
-      - "7070:80"  # Map port 7070 on the host to port 80 in the container
+      - "90:90"
     container_name: angular-app
