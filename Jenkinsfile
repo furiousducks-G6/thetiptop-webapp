@@ -29,7 +29,7 @@ pipeline {
     post {
         success {
             script {
-                echo "Deployment successful. App is available at http://localhost:7070"
+                echo "Deployment successful. App is available at http://167.99.134.180:7070"
             }
         }
         failure {
