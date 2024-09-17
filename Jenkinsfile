@@ -3,8 +3,6 @@ pipeline {
 
     environment {
         COMPOSE_FILE = 'docker-compose.yml'
-        IMAGE_NAME = 'furiousducks6/angular-app'
-        DOCKER_CREDENTIALS_ID = 'docker-hub'
         BRANCH_NAME = '' // Global variable for branch name
     }
 
@@ -21,11 +19,8 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        sh "docker-compose -f ${COMPOSE_FILE} build"
-                    }
-                }
+                // Build using docker-compose with no cache
+                sh "docker-compose -f ${COMPOSE_FILE} build --no-cache"
             }
         }
 
@@ -34,20 +29,8 @@ pipeline {
                 expression { BRANCH_NAME == 'origin/develop' }
             }
             steps {
+                // Deploy the Docker containers
                 sh "docker-compose -f ${COMPOSE_FILE} up -d"
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        def imageTag = 'latest-dev'
-                        sh "docker tag ${IMAGE_NAME}:${imageTag} ${IMAGE_NAME}:latest"
-                        sh "docker push ${IMAGE_NAME}:${imageTag}"
-                        sh "docker push ${IMAGE_NAME}:latest"
-                    }
-                }
             }
         }
     }
