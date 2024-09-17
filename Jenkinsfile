@@ -1,41 +1,42 @@
 pipeline {
     agent any
-
-    environment {
-        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
-    }
-
+    
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Build and Deploy with Docker Compose') {
+        stage('Build') {
             steps {
                 script {
-                    try {
-                        // Build and deploy the service using docker-compose
-                        sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up --build -d"
-                    } catch (Exception e) {
-                        error "Build and Deploy failed: ${e.message}"
-                    }
+                    // Clean up workspace
+                    deleteDir()
+                    
+                    // Checkout code from 'develop' branch
+                    checkout([$class: 'GitSCM', 
+                              branches: [[name: '*/develop']], 
+                              userRemoteConfigs: [[url: 'https://your-repository-url.git']]
+                             ])
+                    
+                    // Build Docker image
+                    sh 'docker build -t angular-app .'
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                script {
+                    // Stop and remove any existing container
+                    sh 'docker-compose down || true'
+                    
+                    // Start containers using Docker Compose
+                    sh 'docker-compose up -d'
                 }
             }
         }
     }
-
+    
     post {
-        success {
-            script {
-                echo "Deployment successful. App is available at http://167.99.134.180:7070"
-            }
-        }
-        failure {
-            script {
-                echo "Deployment failed"
-            }
+        always {
+            // Clean up Docker containers and images
+            sh 'docker system prune -af'
         }
     }
 }
