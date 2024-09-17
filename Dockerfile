@@ -20,8 +20,7 @@ RUN npm run build -- --configuration production
 FROM nginx:alpine
 
 # Copy built Angular app from the previous stage
-COPY --from=build /app/dist/ /usr/share/nginx/html
-
+COPY --from=build /app/dist/thetiptop-web /usr/share/nginx/html
 # Expose the port Nginx is running on
 EXPOSE 80
 
