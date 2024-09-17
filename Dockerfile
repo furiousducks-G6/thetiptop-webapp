@@ -1,31 +1,28 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18 AS build
+# Étape 1 : Construire l'application Angular
+FROM node:18-alpine AS build
 
-# Set the working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
+# Copier les fichiers package.json et package-lock.json
 COPY package*.json ./
 
-# Install dependencies
+# Installer les dépendances
 RUN npm install
 
-# Copy the rest of the application code
+# Copier le reste des fichiers du projet
 COPY . .
 
-# Build the Angular app
+# Construire l'application en mode production
 RUN npm run build -- --configuration production
-# Stage 2: Serve the app
+
+# Étape 2 : Utiliser Nginx pour servir les fichiers compilés
 FROM nginx:alpine
 
-# Copy built Angular app from the previous stage
-COPY --from=build /app/dist/thetiptop-web /usr/share/nginx/html
+# Copier les fichiers construits vers le répertoire Nginx
+COPY --from=build /usr/src/app/dist/thetiptop-web /usr/share/nginx/html
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose the port the app runs on
+# Exposer le port 80 pour Nginx
 EXPOSE 80
 
-# Start nginx and keep it running in the foreground
+# Démarrer Nginx
 CMD ["nginx", "-g", "daemon off;"]
