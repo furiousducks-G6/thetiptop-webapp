@@ -2,31 +2,36 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_COMPOSE_FILE = 'docker-compose.yml'  // Path to docker-compose.yml
-        PORT_NGINX = '8082'
-        DOCKER_CREDENTIALS_ID = 'docker-hub'  // Optional, if pushing images to Docker Hub
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        VM_USER = 'username'
+        VM_IP = 'vm-ip'
+        REMOTE_PATH = '/var/www/angular-app'
     }
 
     stages {
-        // Step 1: Checkout the repository
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        // Step 2: Build and deploy using Docker Compose
-        stage('Build and Deploy with Docker Compose') {
+        stage('Build Angular Application') {
+            steps {
+                script {
+                    // Build the Angular application using Docker
+                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} build --no-cache"
+                }
+            }
+        }
+
+        stage('Deploy to VM') {
             steps {
                 script {
                     try {
-                        // Pull any required images (if necessary)
-                        sh "docker-compose -f ${DOCKER_COMPOSE_FILE} pull"
-                        
-                        // Build and deploy the service using docker-compose
-                        sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up --build -d"
+                        // Copy the built Angular application to the VM
+                        sh "scp -r dist/thetiptop-web ${VM_USER}@${VM_IP}:${REMOTE_PATH}"
                     } catch (Exception e) {
-                        error "Build and Deploy failed: ${e.message}"
+                        error "Deployment failed: ${e.message}"
                     }
                 }
             }
@@ -36,7 +41,7 @@ pipeline {
     post {
         success {
             script {
-                echo "Deployment successful. App is available at http://<your_vm_ip>:${PORT_NGINX}"
+                echo "Deployment successful. App is available at http://${VM_IP}"
             }
         }
         failure {
