@@ -4,5 +4,5 @@ services:
   angular-app:
     build: .
     ports:
-      - "90:90"
+      - "4100:80"  # Map port 4100 on the host to port 80 in the container
     container_name: angular-app
