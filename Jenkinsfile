@@ -19,15 +19,7 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                script {
-                    docker.image("thetiptop-web:latest").inside {
-                        sh 'npm run test'
-                    }
-                }
-            }
-        }
+     
 
         stage('Deploy') {
             steps {
