@@ -2,12 +2,13 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'your-dockerhub-username/angular-app'  // Update this
-        DOCKER_CREDENTIALS_ID = 'docker-hub'  // Your Jenkins Docker Hub credentials
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'  // Path to docker-compose.yml
         PORT_NGINX = '8082'
+        DOCKER_CREDENTIALS_ID = 'docker-hub'  // Optional, if pushing images to Docker Hub
     }
 
     stages {
+
         // Step 1: Checkout the repository
         stage('Checkout') {
             steps {
@@ -15,19 +16,39 @@ pipeline {
             }
         }
 
-        // Step 2: Build the Docker image using Dockerfile
-        stage('Build Docker Image') {
+        // Step 2: Build and run using Docker Compose
+        stage('Build and Deploy with Docker Compose') {
             steps {
                 script {
-                    // Build the Docker image from the Dockerfile
-                    sh "docker build -t ${IMAGE_NAME}:latest ."
+                    // Build and deploy the service using docker-compose
+                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up --build -d"
                 }
             }
         }
 
-        // Step 3: Run the Docker container using the built image
-        stage('Deploy to NGINX') {
+        // Optional Step: Push to Docker Hub
+        stage('Push to Docker Hub') {
+            when {
+                expression {
+                    return false  // Set this to true to enable Docker push
+                }
+            }
             steps {
                 script {
-                    // Remove the existing container if it exists
-                    sh "docker rm -
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                        sh "docker-compose -f ${DOCKER_COMPOSE_FILE} push"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Deployment successful. App is available at http://<your_vm_ip>:${PORT_NGINX}"
+        }
+        failure {
+            echo "Deployment failed"
+        }
+    }
+}
