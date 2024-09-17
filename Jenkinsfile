@@ -26,22 +26,7 @@ pipeline {
             }
         }
 
-        // Optional Step: Push to Docker Hub
-        stage('Push to Docker Hub') {
-            when {
-                expression {
-                    return false  // Set this to true to enable Docker push
-                }
-            }
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        sh "docker-compose -f ${DOCKER_COMPOSE_FILE} push"
-                    }
-                }
-            }
-        }
-    }
+        
 
     post {
         success {
