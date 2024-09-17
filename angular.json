@@ -21,11 +21,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/thetiptop-web",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -47,7 +47,7 @@
                 "output": "/"
               },
               {
-                "glob": "sitemap.xml",     
+                "glob": "sitemap.xml",
                 "input": "src/",
                 "output": "/"
               }
@@ -60,11 +60,7 @@
               "node_modules/gsap/dist/gsap.min.js",
               "src/assets/js/Winwheel.js"
             ],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "baseHref": "/"
           },
           "configurations": {
             "production": {
