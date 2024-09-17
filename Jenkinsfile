@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // Using SSH for GitHub authentication
-                    git url: 'git@github.com:your-repo/thetiptop-web.git', branch: 'test', credentialsId: 'gitHere'
+                     git url: 'https://github.com/your-repo/thetiptop-web.git', branch: 'test', credentialsId: 'gitHere'
                 }
             }
         }
