@@ -22,8 +22,8 @@ FROM nginx:alpine
 # Copy built Angular app from the previous stage
 COPY --from=build /app/dist/ /usr/share/nginx/html
 
-# Expose the port the app runs on
-EXPOSE 4100
+# Expose the port Nginx is running on
+EXPOSE 80
 
 # Start nginx and keep it running in the foreground
 CMD ["nginx", "-g", "daemon off;"]
