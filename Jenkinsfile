@@ -8,7 +8,6 @@ pipeline {
     }
 
     stages {
-
         // Step 1: Checkout the repository
         stage('Checkout') {
             steps {
@@ -16,24 +15,34 @@ pipeline {
             }
         }
 
-        // Step 2: Build and run using Docker Compose
+        // Step 2: Build and deploy using Docker Compose
         stage('Build and Deploy with Docker Compose') {
             steps {
                 script {
-                    // Build and deploy the service using docker-compose
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up --build -d"
+                    try {
+                        // Pull any required images (if necessary)
+                        sh "docker-compose -f ${DOCKER_COMPOSE_FILE} pull"
+                        
+                        // Build and deploy the service using docker-compose
+                        sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up --build -d"
+                    } catch (Exception e) {
+                        error "Build and Deploy failed: ${e.message}"
+                    }
                 }
             }
         }
-
-        
+    }
 
     post {
         success {
-            echo "Deployment successful. App is available at http://<your_vm_ip>:${PORT_NGINX}"
+            script {
+                echo "Deployment successful. App is available at http://<your_vm_ip>:${PORT_NGINX}"
+            }
         }
         failure {
-            echo "Deployment failed"
+            script {
+                echo "Deployment failed"
+            }
         }
     }
 }
