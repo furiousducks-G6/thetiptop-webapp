@@ -11,7 +11,7 @@ pipeline {
                     // Checkout code from 'develop' branch
                     checkout([$class: 'GitSCM', 
                               branches: [[name: '*/develop']], 
-                              userRemoteConfigs: [[url: 'https://your-repository-url.git']]
+                              userRemoteConfigs: [[url: 'https://github.com/furiousducks-G6/thetiptop-webapp']]
                              ])
                     
                     // Build Docker image
