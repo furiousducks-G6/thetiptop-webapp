@@ -1,24 +1,26 @@
-# Stage 1: Build the Angular app
+# Step 1: Build the Angular app
 FROM node:18-alpine AS build
 
 WORKDIR /usr/src/app
 
-# Copy package.json and install dependencies
-COPY package.json package-lock.json ./
+# Copy the package.json and install dependencies
+COPY package*.json ./
 RUN npm install
 
-# Copy the entire application code and build the app
+# Copy the rest of the project files
 COPY . .
-RUN npm run build --prod
 
-# Stage 2: Serve the app with NGINX
+# Build the Angular app in production mode
+RUN npm run build -- --configuration production
+
+# Step 2: Serve the built app with Nginx
 FROM nginx:alpine
 
-# Copy built Angular app to NGINX's default public directory
-COPY --from=build /usr/src/app/dist/angular-app /usr/share/nginx/html
+# Copy the built Angular files from the build stage to Nginx's directory
+COPY --from=build /usr/src/app/dist/thetiptop-web /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
 
-# Start NGINX server
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
