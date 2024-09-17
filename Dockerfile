@@ -23,7 +23,7 @@ FROM nginx:alpine
 COPY --from=build /app/dist/ /usr/share/nginx/html
 
 # Expose the port the app runs on
-EXPOSE 80
+EXPOSE 4100
 
 # Start nginx and keep it running in the foreground
 CMD ["nginx", "-g", "daemon off;"]
