@@ -1,17 +1,16 @@
 # Stage 1: Build the Angular app
-FROM node:16 AS build
+FROM node:18 AS build
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Install Angular CLI
-RUN npm install -g @angular/cli
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
 # Install dependencies
-COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the rest of the app code
+# Copy the rest of the application code
 COPY . .
 
 # Build the Angular app
@@ -20,8 +19,8 @@ RUN ng build --prod
 # Stage 2: Serve the app
 FROM nginx:alpine
 
-# Copy the built app to the Nginx directory
-COPY --from=build /app/dist/your-angular-app /usr/share/nginx/html
+# Copy the build artifacts from the build stage
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # Expose port 90
 EXPOSE 90
