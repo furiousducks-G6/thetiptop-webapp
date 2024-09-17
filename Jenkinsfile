@@ -3,9 +3,6 @@ pipeline {
 
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
-        VM_USER = 'username'
-        VM_IP = 'vm-ip'
-        REMOTE_PATH = '/var/www/angular-app'
     }
 
     stages {
@@ -15,23 +12,14 @@ pipeline {
             }
         }
 
-        stage('Build Angular Application') {
-            steps {
-                script {
-                    // Build the Angular application using Docker
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} build --no-cache"
-                }
-            }
-        }
-
-        stage('Deploy to VM') {
+        stage('Build and Deploy with Docker Compose') {
             steps {
                 script {
                     try {
-                        // Copy the built Angular application to the VM
-                        sh "scp -r dist/thetiptop-web ${VM_USER}@${VM_IP}:${REMOTE_PATH}"
+                        // Build and deploy the service using docker-compose
+                        sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up --build -d"
                     } catch (Exception e) {
-                        error "Deployment failed: ${e.message}"
+                        error "Build and Deploy failed: ${e.message}"
                     }
                 }
             }
@@ -41,7 +29,7 @@ pipeline {
     post {
         success {
             script {
-                echo "Deployment successful. App is available at http://${VM_IP}"
+                echo "Deployment successful. App is available at http://localhost:7070"
             }
         }
         failure {
