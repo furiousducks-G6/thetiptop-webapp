@@ -5,10 +5,7 @@ pipeline {
         COMPOSE_FILE = 'docker-compose.yml'
         IMAGE_NAME = 'furiousducks6/angular-app'
         DOCKER_CREDENTIALS_ID = 'docker-hub'
-        SLACK_CHANNEL = '#social'
-        SLACK_CREDENTIALS_ID = 'slack'
-        WORKDIR = '/usr/src/app'
-        BRANCH_NAME = '' // Define a global variable for the branch name
+        BRANCH_NAME = '' // Global variable for branch name
     }
 
     stages {
@@ -16,7 +13,7 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    BRANCH_NAME = env.GIT_BRANCH ?: sh(script: 'git rev-parse --abbrev-ref HEAD || echo "detached"', returnStdout: true).trim()
+                    BRANCH_NAME = env.GIT_BRANCH ?: sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                     echo "Current branch: ${BRANCH_NAME}"
                 }
             }
@@ -33,18 +30,13 @@ pipeline {
         }
 
         stage('Deploy to Dev') {
-    when {
-        expression {
-
-            return BRANCH_NAME == 'origin/develop' // Use the global variable
+            when {
+                expression { BRANCH_NAME == 'origin/develop' }
+            }
+            steps {
+                sh "docker-compose -f ${COMPOSE_FILE} up -d"
+            }
         }
-    }
-    steps {
-        script {
-            sh "docker-compose -f ${COMPOSE_FILE} up -d"
-        }
-    }
-}
 
         stage('Push to Docker Hub') {
             steps {
@@ -61,16 +53,8 @@ pipeline {
     }
 
     post {
-    success {
-        script {
-            echo "Success"
+        always {
+            echo currentBuild.result == 'SUCCESS' ? 'Success' : 'Failure'
         }
     }
-    failure {
-        script {
-            echo "Failure"
-        }
-    }
-}
-
 }
