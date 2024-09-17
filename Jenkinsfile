@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your-repo/thetiptop-web.git'
+                git branch: 'test', url: 'https://github.com/your-repo/thetiptop-web.git'
             }
         }
 
