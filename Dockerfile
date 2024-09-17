@@ -13,14 +13,4 @@ COPY . .
 # Build the Angular app in production mode
 RUN npm run build -- --configuration production
 
-# Step 2: Serve the built app with Nginx
-FROM nginx:alpine
-
-# Copy the built Angular files from the build stage to Nginx's directory
-COPY --from=build /usr/src/app/dist/thetiptop-web /usr/share/nginx/html
-
-# Expose port 80
-EXPOSE 80
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# You can remove the Nginx-related instructions if not using Nginx in the container
