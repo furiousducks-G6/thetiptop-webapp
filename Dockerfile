@@ -13,18 +13,17 @@ COPY . .
 # Build the Angular app in production mode
 RUN npm run build -- --configuration production
 
-# Step 2: Use a minimal image to run the Angular app (Optional)
-# If you want to serve the Angular app using a simple HTTP server
-# You can use an HTTP server like `http-server` to serve the static files.
-# Here we use a multi-stage build to reduce the final image size.
+# Step 2: Use a lightweight image to copy the built app
+FROM alpine:latest
 
-FROM nginx:alpine
+WORKDIR /usr/src/app
 
-# Copy the built Angular app to the Nginx directory
-COPY --from=build /usr/src/app/dist/thetiptop-web /usr/share/nginx/html
+# Copy the built Angular app from the build stage
+COPY --from=build /usr/src/app/dist/thetiptop-web /usr/src/app/dist/thetiptop-web
 
-# Expose port 80
-EXPOSE 80
+# Expose port (optional)
+EXPOSE 8080
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Command to serve the app using a simple HTTP server (if needed)
+# RUN apk add --no-cache python3 py3-pip && pip3 install httpserver
+# CMD ["python3", "-m", "http.server", "8080"]
