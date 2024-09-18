@@ -28,7 +28,7 @@ export class TicketService {
       search: searchTerm
     };
 
-    const request = axios.get(`${this.apiUrl}/all`, {
+    const request = axios.get(`${this.apirUrl2}/all`, {
       headers: {
         Authorization: `Bearer ${token}`
       },
