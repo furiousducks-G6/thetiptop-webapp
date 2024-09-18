@@ -92,8 +92,6 @@ export class TicketService {
       return throwError(() => new Error('Token is missing or invalid'));
     }
 
-    // Log to see what is being sent in the request
-    console.log('Sending request to validate ticket with code:', ticketCode);
 
     // Convertir les données en format x-www-form-urlencoded
     const data = qs.stringify({ code: ticketCode });

@@ -24,7 +24,6 @@ export class TombolatComponent implements OnInit {
     // Récupérer les utilisateurs
     this.userService.getUserGame().subscribe(
       (data) => {
-        console.log('Réponse de l\'API :', data); // Affiche la réponse pour vérifier
   
         if (Array.isArray(data)) {
           this.users = data.map((user: any) => user.name); // Pas besoin de 'hydra:member' si c'est un tableau simple

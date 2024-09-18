@@ -21,11 +21,9 @@ export class AuthService {
   login(email: string, password: string): Promise<any> {
     return axios.post(`${this.apiUrl}/login`, { Email: email, password: password }, { headers: { 'Content-Type': 'application/json' } })
       .then((response: any) => {
-        console.log('Login response:', response); // Debug
         let data: any = response.data;
         if (data) {
           const token = data.token;
-          console.log('Token:', token); // Debug
           if (token) {
             this.tokenService.setToken(token);
             this.router.navigate(['/user-history']);

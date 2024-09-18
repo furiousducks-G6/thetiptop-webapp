@@ -105,9 +105,7 @@ export class LoginComponent implements OnInit {
                     // Récupérer le profil de l'utilisateur après la connexion
                     this.authService.getUserProfile().subscribe(
                         user => {
-                            console.log('Informations utilisateur:', user);
                             const role = user.Rle;
-                            console.log('Rôle utilisateur:', role);
 
                             // Redirection en fonction du rôle
                             switch (role) {

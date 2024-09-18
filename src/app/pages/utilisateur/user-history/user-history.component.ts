@@ -27,7 +27,6 @@ export class UserHistoryComponent implements OnInit {
   loadUserLots(): void {
     const token = localStorage.getItem('token');
     if (token) {
-      console.log('Token utilisé pour récupérer les lots:', token);
       
       axios.get(`${this.apiUrl}/user/lot`, {
         headers: {
