@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../services/user.service';
 import { gsap } from 'gsap';
+import jsPDF from 'jspdf';
+import QRCode from 'qrcode';
 
 declare var Winwheel: any; // Déclaration de Winwheel comme variable globale
 
@@ -15,6 +17,7 @@ export class TombolatComponent implements OnInit {
   audio: HTMLAudioElement; // Élément audio pour jouer le son
   showModal: boolean = false; // State to control modal visibility
   winner: string = ''; // Store the winner's email
+  logoPath: string = 'assets/images/logo.png';
 
   constructor(private userService: UserService) {
     this.audio = new Audio('assets/sounds/roulette.mp3'); // Initialisation de l'audio dans le constructeur
@@ -83,5 +86,36 @@ export class TombolatComponent implements OnInit {
   // Fermer la modal
   closeModal() {
     this.showModal = false;
+  }
+
+  printPDF(): void {
+    const doc = new jsPDF();
+
+    // Charger le logo de l'entreprise
+    const logo = new Image();
+    logo.src = this.logoPath;
+    
+    logo.onload = () => {
+      doc.addImage(logo, 'PNG', 15, 10, 50, 20); // Ajout du logo
+      doc.setFontSize(18);
+      doc.setTextColor(40);
+      doc.text('TheTipTop - Reçu de Gagnant', 105, 40, { align: 'center' });
+      
+      doc.setFontSize(14);
+      doc.text(`Félicitations à ${this.winner}`, 15, 60);
+      doc.text('Vous avez remporté un lot dans notre tombola !', 15, 70);
+      doc.text('Détails du Lot :', 15, 80);
+
+      // Ajouter un QR code avec les détails du gagnant
+      QRCode.toDataURL(this.winner, { width: 100, height: 100 }, (err: Error | null, qrCodeUrl: string) => {
+        if (!err) {
+          doc.addImage(qrCodeUrl, 'PNG', 80, 90, 50, 50); // QR Code
+          doc.text('Merci de votre participation !', 15, 160);
+          doc.save(`Gagnant_${this.winner}.pdf`); // Enregistrer le PDF
+        } else {
+          console.error("Erreur lors de la génération du code QR", err);
+        }
+      });      
+    };
   }
 }
