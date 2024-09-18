@@ -112,28 +112,37 @@ export class UserService {
   /**
    * Route des utilisateurs ayant participé au concours
    */
-  getUserGame(): Observable<any> {
+  getUserGame(): Observable<any[]> { 
     const token = localStorage.getItem('token');
     if (!token) {
       console.log('Token manquant ou invalide');
       this.router.navigate(['/login']);
       return throwError(() => new Error('Token manquant ou invalide'));
     }
-
+  
     const headers = {
       Authorization: `Bearer ${token}`
     };
-
+  
     return from(
       axios.get(`${this.apiUrl}/contest/participants`, { headers })
     ).pipe(
-      map(response => response.data),
+      map(response => {
+        // Map to extract the required fields
+        return response.data.map((participant: any) => ({
+          id: participant.id,
+          name: participant.name,
+          tickets: participant.tickets,
+          firstname: participant.firstname
+        }));
+      }),
       catchError(error => {
         console.error('Erreur lors de la récupération des participants au concours:', error);
         return throwError(() => new Error('Erreur lors de la récupération des participants au concours'));
       })
     );
   }
+  
 
   /**
    * Récupérer le nombre total d'utilisateurs depuis l'API

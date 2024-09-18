@@ -29,7 +29,7 @@ export class TombolatComponent implements OnInit {
       (data) => {
   
         if (Array.isArray(data)) {
-          this.users = data.map((user: any) => user.firstName); // Pas besoin de 'hydra:member' si c'est un tableau simple
+          this.users = data.map((user: any) => user.firstname); // Pas besoin de 'hydra:member' si c'est un tableau simple
           if (this.users.length > 0) {
             this.setupWheel(); // Configurer la roue une fois les utilisateurs chargés
           } else {
