@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -33,6 +34,17 @@ export class LoginComponent implements OnInit {
     this.isLoginMode = isLoginMode;
     this.errorMessage = ''; // Réinitialiser les messages lors du changement de formulaire
     this.successMessage = '';
+    
+
+    this.isLoginMode = isLoginMode;
+    this.errorMessage = ''; // Réinitialiser les messages lors du changement de formulaire
+    this.successMessage = '';
+    
+    // Réinitialiser les champs du formulaire
+    this.email = '';
+    this.password = '';
+    this.name = '';
+    this.firstName = '';
   }
 
   validatePassword(password: string): boolean {
