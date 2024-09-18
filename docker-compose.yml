@@ -1,23 +1,11 @@
 version: '3.8'
 
+
 services:
   angular-app:
     container_name: angular-app
     build:
       context: .
-    volumes:
-      - .:/usr/src/app
-    ports:
-      - "4200:4200"
-
-  nginx:
-    container_name: nginx-app
-    image: nginx:alpine
-    depends_on:
-      - angular-app
     ports:
       - "8082:80"
-    volumes:
-      - ./dist/thetiptop-web/browser:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Utilisez le fichier nginx.conf personnalisé
     restart: always
