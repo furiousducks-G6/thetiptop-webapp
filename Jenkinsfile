@@ -19,15 +19,17 @@ pipeline {
             }
           }
         }
-        stage('Checkout') {
-            steps {
-                checkout scm
-                script {
-                    BRANCH_NAME = env.GIT_BRANCH ?: sh(script: 'git rev-parse --abbrev-ref HEAD || echo "detached"', returnStdout: true).trim()
-                    echo "Current branch: ${BRANCH_NAME}"
-                }
-            }
+       stage('Checkout') {
+    steps {
+        checkout scm
+        script {
+            sh 'if [ ! -d .git ]; then echo "No .git directory found"; fi'
+            BRANCH_NAME = env.GIT_BRANCH ?: sh(script: 'git rev-parse --abbrev-ref HEAD || echo "detached"', returnStdout: true).trim()
+            echo "Current branch: ${BRANCH_NAME}"
         }
+    }
+}
+
 
         stage('Build Docker Image') {
             steps {
