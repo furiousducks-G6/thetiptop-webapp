@@ -12,74 +12,14 @@ pipeline {
     }
 
     stages {
-        stage('directory'){
-          steps{
-            script{
-              sh "ls"
-            }
-          }
-        }
-       stage('Checkout') {
-    steps {
-        checkout scm
-        script {
-            sh 'if [ ! -d .git ]; then echo "No .git directory found"; fi'
-            BRANCH_NAME = env.GIT_BRANCH ?: sh(script: 'git rev-parse --abbrev-ref HEAD || echo "detached"', returnStdout: true).trim()
-            echo "Current branch: ${BRANCH_NAME}"
-        }
-    }
-}
-
-
-        stage('Build Docker Image') {
+        
+        stage('Checkout') {
             steps {
+               
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        sh "docker-compose -f ${COMPOSE_FILE} build"
-                    }
+                   sh "echo bonjour"
                 }
             }
         }
-
-        stage('Deploy to Dev') {
-    when {
-        expression {
-
-            return BRANCH_NAME == 'origin/develop' // Use the global variable
-        }
-    }
-    steps {
-        script {
-            sh "docker-compose -f ${COMPOSE_FILE} up -d"
-        }
-    }
-}
-
-        stage('Push to Docker Hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        def imageTag = 'latest-dev'
-                        sh "docker tag ${IMAGE_NAME}:${imageTag} ${IMAGE_NAME}:latest"
-                        sh "docker push ${IMAGE_NAME}:${imageTag}"
-                        sh "docker push ${IMAGE_NAME}:latest"
-                    }
-                }
-            }
-        }
-    }
-
-    post {
-    success {
-        script {
-            echo "Success"
-        }
-    }
-    failure {
-        script {
-            echo "Failure"
-        }
-    }
-}
 
 }
