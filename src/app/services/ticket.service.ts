@@ -28,13 +28,13 @@ export class TicketService {
       search: searchTerm
     };
 
-    const request = axios.get(`${this.apirUrl2}/all`, {
+    const request = axios.get(this.apiUrl, {
       headers: {
         Authorization: `Bearer ${token}`
       },
       params: params
     });
-
+    
     return from(request).pipe(
       map(response => ({
         tickets: response.data['hydra:member'].map((ticket: any) => ({
