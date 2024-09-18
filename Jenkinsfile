@@ -12,6 +12,13 @@ pipeline {
     }
 
     stages {
+        stage('directory'){
+          steps{
+            script{
+              sh "ls"
+            }
+          }
+        }
         stage('Checkout') {
             steps {
                 checkout scm
