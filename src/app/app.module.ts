@@ -56,8 +56,7 @@ import { NewsletterComponent } from './pages/admin/newsletter/newsletter.compone
     CookieBannerComponent,
     LotComponent,
     JeuxComponent,
-    NewsletterComponent
-
+    NewsletterComponent,
   ],
   imports: [
     BrowserModule,

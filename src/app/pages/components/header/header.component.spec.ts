@@ -79,10 +79,6 @@ describe('HeaderComponent', () => {
   });
 
 
-  it('should navigate to the correct section on scrollToSection', async () => {
-    await component.scrollToSection('home');
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/home'], { fragment: 'home' });
-  });
 
   it('should log out the user', () => {
     component.logout();

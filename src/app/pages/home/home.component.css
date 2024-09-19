@@ -16,7 +16,7 @@
 /* Banderole en haut à gauche */
 .ribbon {
   position: absolute;
-  top: 150px;
+  top: 205px;
   left: 0px;
   background-color: #e74c3c;
   color: white;
@@ -29,11 +29,11 @@
 /* Ajuster la position du ruban pour les petits écrans */
 @media (max-width: 640px) {
   .ribbon {
-      top: 100px; /* Descendre la banderole pour la rendre lisible */
+      top: 175px; /* Descendre la banderole pour la rendre lisible */
       left: -10px; /* Ajuster l'alignement */
       padding: 5px 10px; /* Réduire la taille pour les petits écrans */
       font-size: 0.75rem; /* Réduire la taille du texte */
-      transform: rotate(-25deg);
+      transform: rotate(-35deg);
       z-index: 1;
   }
   h2{
@@ -160,4 +160,7 @@ footer {
   color: white;
   max-width: 100vw; /* Limite la largeur pour éviter le débordement */
   padding: 0 10px;
+}
+.secto{
+  padding-top: 45px;
 }
