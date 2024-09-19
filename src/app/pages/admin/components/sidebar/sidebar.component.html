@@ -72,7 +72,8 @@
       <i class="fa-solid fa-circle-user mr-3"></i>
       <span class="hidden md:inline">Profil</span>
     </a>
-    <a 
+    <a
+    *ngIf="userRole === 'A'" 
     routerLink="/admin/newsletter" 
     routerLinkActive="bg-green-700"
     [ngClass]="{ 'bg-green-700': isActive('/admin/ewsletter') }"
